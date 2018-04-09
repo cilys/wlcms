@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>app版本</title>
+        
+        <script type="text/javascript" src="js/jquery-3.2.1.min.js" ></script>
+        
+        
+
+    </head>
+    <body>
+    	
+    	<textarea id="txt" style="height: 200px;" ></textarea>
+		
+		<button id="btn">按钮</button>
+		
+		<script>
+        	$(window).ready(function(){
+        		$("#btn").click(function(){
+        			var txt = $("#txt").val()
+        			console.log(JSON.stringify(txt))
+        			alert($("#txt").val())
+        		})
+        	})
+	    </script>
+    </body>
+    
+    
+</html>
