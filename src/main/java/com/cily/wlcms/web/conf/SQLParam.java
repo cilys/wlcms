@@ -11,6 +11,7 @@ public interface SQLParam {
     String T_RIGHT_ROLE = "t_right_role";
     String T_PROJECT = "t_project";
     String T_USER_PROJECT = "t_user_project";
+    String T_RECORD = "t_record";
 
 
     String USER_ID = "userId";
@@ -42,4 +43,13 @@ public interface SQLParam {
 
     String STATUS_ENABLE = "0";
     String STATUS_DISABLE = "1";
+
+    String RECORD_ID = "recordId";
+    String RECORD_NAME = "recordName";
+    String RECORD_NUM = "recordNum";
+    String RECORD_LEVEL = "recordLevel";
+    String RECORD_CONTENT = "recordContent";
+    String RECORD_IMG_URL = "recordImgUrl";
+    String RECORD_CREATE_USER_ID = "recordCreateUserId";
+    String RECORD_STATUS = "recordStatus";
 }
