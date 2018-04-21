@@ -48,11 +48,11 @@ public class Conf extends JFinalConfig {
         me.add(arp);
         arp.addMapping(SQLParam.T_USER, SQLParam.USER_ID, UserModel.class);
 
-        arp.addMapping(SQLParam.T_RIGHT, SQLParam.RIGHT_ID, RightModel.class);
-        arp.addMapping(SQLParam.T_RIGHT_ROLE,
-                StrUtils.join(SQLParam.RIGHT_ID, ",",
-                        SQLParam.ROLE_ID), RightRoleModel.class);
-        arp.addMapping(SQLParam.T_ROLE, SQLParam.ROLE_ID, RoleModel.class);
+//        arp.addMapping(SQLParam.T_RIGHT, SQLParam.RIGHT_ID, RightModel.class);
+//        arp.addMapping(SQLParam.T_RIGHT_ROLE,
+//                StrUtils.join(SQLParam.RIGHT_ID, ",",
+//                        SQLParam.ROLE_ID), RightRoleModel.class);
+//        arp.addMapping(SQLParam.T_ROLE, SQLParam.ROLE_ID, RoleModel.class);
     }
 
     @Override
