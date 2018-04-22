@@ -17,16 +17,13 @@ public class RoleIdInterceptor extends BaseInterceptor {
     public void intercept(Invocation inv) {
         String roleId = getParam(inv, SQLParam.ROLE_ID);
         if (StrUtils.isEmpty(roleId)){
-            inv.getController().renderJson(ResUtils.res(
-                    Param.C_ROLE_ID_NULL, createTokenByOs(inv), null));
+            renderJson(inv, Param.C_ROLE_ID_NULL, createTokenByOs(inv), null);
             return;
         }
         if (RoleModel.roleIsExist(roleId)){
             inv.invoke();
         }else {
-            inv.getController().renderJson(ResUtils.res(
-                    Param.C_ROLE_NOT_EXIST, createTokenByOs(inv), null
-            ));
+            renderJson(inv, Param.C_ROLE_NOT_EXIST, createTokenByOs(inv), null);
         }
     }
 }

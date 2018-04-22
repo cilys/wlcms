@@ -16,12 +16,11 @@ public class LoginedInterceptor extends BaseInterceptor {
         String token = getToken(inv);
         String deviceImei = getDeviceImeiFromAttr(inv);
         if (StrUtils.isEmpty(userId)){
-            inv.getController().renderJson(ResUtils.res(Param.C_USER_ID_NULL, null, null));
+            renderJson(inv, Param.C_USER_ID_NULL, null, null);
             return;
         }
         if (StrUtils.isEmpty(token)){
-            inv.getController().renderJson(
-                    ResUtils.res(Param.C_TOKEN_NULL, null, null));
+            renderJson(inv, Param.C_TOKEN_NULL, null, null);
             return;
         }
         //TODO 数据库验证token是否有效
@@ -29,8 +28,7 @@ public class LoginedInterceptor extends BaseInterceptor {
         if (Param.C_SUCCESS.equals(checkToken)){
             inv.invoke();
         }else {
-            inv.getController().renderJson(
-                    ResUtils.res(checkToken, null, null));
+            renderJson(inv, checkToken, null, null);
             return;
         }
     }

@@ -16,15 +16,13 @@ public class RightIdInterceptor extends BaseInterceptor {
     public void intercept(Invocation inv) {
         String rightId = getParam(inv, SQLParam.RIGHT_ID);
         if (StrUtils.isEmpty(rightId)){
-            inv.getController().renderJson(ResUtils.res(Param.C_RIGHT_ID_NULL,
-                    createTokenByOs(inv), null));
+            renderJson(inv, Param.C_RIGHT_ID_NULL, createTokenByOs(inv), null);
             return;
         }
         if (RightModel.rightIsExist(rightId)){
             inv.invoke();
         }else {
-            inv.getController().renderJson(ResUtils.res(Param.C_RIGHT_NOT_EXIST,
-                    createTokenByOs(inv), null));
+            renderJson(inv, Param.C_RIGHT_NOT_EXIST, createTokenByOs(inv), null);
             return;
         }
     }

@@ -24,8 +24,7 @@ public class UserNameInterceptor extends BaseInterceptor {
         String token = getToken(inv);
 
         if (StrUtils.isEmpty(userName)){
-            inv.getController().renderJson(ResUtils.res(Param.C_USER_NAME_NULL,
-                    TokenUtils.createToken(userId, deviceImei, token),null));
+            renderJson(inv, Param.C_USER_NAME_NULL, createTokenByOs(inv),null);
         }else {
             inv.invoke();
         }

@@ -52,4 +52,15 @@ public interface SQLParam {
     String RECORD_IMG_URL = "recordImgUrl";
     String RECORD_CREATE_USER_ID = "recordCreateUserId";
     String RECORD_STATUS = "recordStatus";
+
+    //最多9张图片，name按照这个顺序来命名
+    String RECORD_IMG_URL_0 = "recordImgUrl0";
+    String RECORD_IMG_URL_1 = "recordImgUrl1";
+    String RECORD_IMG_URL_2 = "recordImgUrl2";
+    String RECORD_IMG_URL_3 = "recordImgUrl3";
+    String RECORD_IMG_URL_4 = "recordImgUrl4";
+    String RECORD_IMG_URL_5 = "recordImgUrl5";
+    String RECORD_IMG_URL_6 = "recordImgUrl6";
+    String RECORD_IMG_URL_7 = "recordImgUrl7";
+    String RECORD_IMG_URL_8 = "recordImgUrl8";
 }

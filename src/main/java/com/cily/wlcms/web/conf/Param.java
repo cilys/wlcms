@@ -58,8 +58,22 @@ public class Param {
     public final static String C_RIGHT_ROLE_ADD_FAILED = "1261";
     public final static String C_RIGHT_ROLE_DEL_FAILED = "1262";
     public final static String C_ADD_PROJECT_FAILED = "2001";
-//    public final static String C_
-//    public final static String C_
+
+    public final static String C_RECORD_ADD_PARAM_NULL = "2101";
+    public final static String C_RECORD_NAME_NULL = "2102";
+    public final static String C_RECORD_NUM_NULL = "2103";
+    public final static String C_RECORD_ADD_FAILED = "2104";
+    public final static String C_RECORD_LEVEL_NULL = "2105";
+    //    public final static String C_
+    //    public final static String C_
+    //    public final static String C_
+    //    public final static String C_
+    //    public final static String C_
+    //    public final static String C_
+    //    public final static String C_
+    //    public final static String C_
+    //    public final static String C_
+    //    public final static String C_
 
     private final static Map<String, String> failureInfo = new HashMap<>();
     static {
@@ -93,11 +107,11 @@ public class Param {
         failureInfo.put(C_RIGHT_ROLE_DEL_FAILED, "删除角色权限失败");
         failureInfo.put(C_RIGHT_REFUSE, "权限被禁用");
         failureInfo.put(C_ADD_PROJECT_FAILED, "添加项目失败");
-//        failureInfo.put(, );
-//        failureInfo.put(, );
-//        failureInfo.put(, );
-//        failureInfo.put(, );
-//        failureInfo.put(, );
+        failureInfo.put(C_RECORD_ADD_PARAM_NULL, "参数为空");
+        failureInfo.put(C_RECORD_NAME_NULL, "名称为空");
+        failureInfo.put(C_RECORD_NUM_NULL, "编号为空");
+        failureInfo.put(C_RECORD_LEVEL_NULL, "等级为空");
+        failureInfo.put(C_RECORD_ADD_FAILED, "发布物料信息失败");
 //        failureInfo.put(, );
 //        failureInfo.put(, );
 //        failureInfo.put(, );

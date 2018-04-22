@@ -18,15 +18,13 @@ public class RightInterceptor extends BaseInterceptor {
 
         UserRoleModel m = UserRoleModel.getUserRoleRight(userId, accessUrl);
         if (m == null){
-            inv.getController().renderJson(ResUtils.res(
-                    Param.C_RIGHT_LOW, createTokenByOs(inv), null));
+            renderJson(inv, Param.C_RIGHT_LOW, createTokenByOs(inv), null);
             return;
         }
         if (SQLParam.STATUS_ENABLE.equals(m.get(SQLParam.STATUS))){
             inv.invoke();
         }else {
-            inv.getController().renderJson(ResUtils.res(
-                    Param.C_RIGHT_REFUSE, createTokenByOs(inv), null));
+            renderJson(inv, Param.C_RIGHT_REFUSE, createTokenByOs(inv), null);
         }
     }
 }

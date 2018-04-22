@@ -2,6 +2,7 @@ package com.cily.wlcms.web.interceptor;
 
 import com.cily.wlcms.web.conf.Param;
 import com.cily.wlcms.web.conf.SQLParam;
+import com.cily.wlcms.web.utils.ResUtils;
 import com.cily.wlcms.web.utils.TokenUtils;
 import com.jfinal.aop.Interceptor;
 import com.jfinal.aop.Invocation;
@@ -44,6 +45,18 @@ public abstract class BaseInterceptor implements Interceptor {
 
     protected String createTokenByOs(Invocation inv){
         return TokenUtils.createToken(getUserId(inv), getDeviceImei(inv), getToken(inv));
+    }
+
+    protected void renderJson(Invocation inv, Object o){
+        if (inv != null ){
+            inv.getController().getResponse().setHeader("Access-Control-Allow-Origin", "*");
+            inv.getController().renderJson(o);
+        }
+    }
+
+    protected void renderJson(Invocation inv, String errorCode, String token, Object data){
+        renderJson(inv, ResUtils.res(errorCode, token, data));
+
     }
 
 }

@@ -37,6 +37,7 @@ public class BaseController extends Controller {
     public void renderJson(Object object) {
 //        getResponse().setHeader("Access-Control-Allow-Origin", "*");
 //        getResponse().setHeader("Access-Control-Allow-Headers", "Content-Type,Access-Token");
+        getResponse().setHeader("Access-Control-Allow-Origin", "*");
         super.renderJson(object);
     }
 }

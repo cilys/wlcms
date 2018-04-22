@@ -16,16 +16,13 @@ public class UserIdInterceptor extends BaseInterceptor {
     public void intercept(Invocation inv) {
         String userId = getParam(inv, SQLParam.USER_ID);
         if (StrUtils.isEmpty(userId)){
-            inv.getController().renderJson(ResUtils.res(
-                    Param.C_USER_ID_NULL, createTokenByOs(inv), null));
+            renderJson(inv, Param.C_USER_ID_NULL, createTokenByOs(inv), null);
             return;
         }
         if (UserModel.getUserByUserId(userId) != null){
             inv.invoke();
         }else {
-            inv.getController().renderJson(ResUtils.res(
-                    Param.C_USER_NOT_EXIST, createTokenByOs(inv), null
-            ));
+            renderJson(inv, Param.C_USER_NOT_EXIST, createTokenByOs(inv), null);
         }
     }
 }
