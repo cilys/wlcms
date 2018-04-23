@@ -17,7 +17,7 @@ public class RecordModel extends Model<RecordModel> {
 
     public static boolean insert(String recordName, String recordNum,
                                  String recordLevel, String recordContent,
-                                 String recordImgUrl){
+                                 String recordImgUrl, String recordCreateUserId){
         if (StrUtils.isEmpty(recordName)){
             return false;
         }
@@ -27,12 +27,16 @@ public class RecordModel extends Model<RecordModel> {
         if (StrUtils.isEmpty(recordLevel)){
             return false;
         }
+        if (StrUtils.isEmpty(recordCreateUserId)){
+            return false;
+        }
 
         RecordModel m = new RecordModel();
         m.set(SQLParam.RECORD_ID, UUIDUtils.getUUID());
         m.set(SQLParam.RECORD_NAME, recordName);
         m.set(SQLParam.RECORD_NUM, recordNum);
         m.set(SQLParam.RECORD_LEVEL, recordLevel);
+        m.set(SQLParam.RECORD_CREATE_USER_ID, recordCreateUserId);
         if (!StrUtils.isEmpty(recordContent)){
             m.set(SQLParam.RECORD_CONTENT, recordContent);
         }

@@ -6,8 +6,8 @@ apply plugin: 'war'
 repositories {
     mavenCentral()
     maven{
-//        url 'http://192.168.112.83:7070/nexus/content/repositories/thirdparty'
-        url 'http://localhost:7070/nexus/content/repositories/thirdparty'
+        url 'http://192.168.112.83:7070/nexus/content/repositories/thirdparty'
+//        url 'http://localhost:7070/nexus/content/repositories/thirdparty'
     }
 }
 
