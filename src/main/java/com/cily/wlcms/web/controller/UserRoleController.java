@@ -19,8 +19,7 @@ public class UserRoleController extends BaseController {
     @Before({UserIdInterceptor.class})
     public void getUserRoles(){
         String userId = getParam(SQLParam.USER_ID);
-        renderJson(ResUtils.success(getToken(),
-                UserRoleModel.getUserRolesByUserId(userId)));
+        renderJsonSuccess(UserRoleModel.getUserRolesByUserId(userId));
     }
 
     /**
@@ -32,9 +31,9 @@ public class UserRoleController extends BaseController {
         String roleId = getParam(SQLParam.ROLE_ID);
 
         if (UserRoleModel.insertUserRole(userId, roleId)){
-            renderJson(ResUtils.success(createTokenByOs(), null));
+            renderJsonSuccess(null);
         }else {
-            renderJson(ResUtils.res(Param.C_USER_ROLE_ADD_FAILED, createTokenByOs(), null));
+            renderJsonFailed(Param.C_USER_ROLE_ADD_FAILED, null);
         }
     }
 
@@ -47,10 +46,9 @@ public class UserRoleController extends BaseController {
         String roleId = getParam(SQLParam.ROLE_ID);
 
         if (UserRoleModel.delByUserIdAndRoleId(userId, roleId)){
-            renderJson(ResUtils.success(createTokenByOs(), null));
+            renderJsonSuccess(null);
         }else {
-            renderJson(ResUtils.res(Param.C_USER_ROLE_DEL_FAILED,
-                    createTokenByOs(), null));
+            renderJsonFailed(Param.C_USER_ROLE_DEL_FAILED, null);
         }
     }
 }

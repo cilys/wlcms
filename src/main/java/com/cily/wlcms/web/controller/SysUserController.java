@@ -2,6 +2,7 @@ package com.cily.wlcms.web.controller;
 
 import com.cily.wlcms.web.conf.Param;
 import com.cily.wlcms.web.conf.SQLParam;
+import com.cily.wlcms.web.model.RecordModel;
 import com.cily.wlcms.web.model.UserModel;
 import com.cily.wlcms.web.utils.ResUtils;
 import com.cily.wlcms.web.utils.UserUtils;
@@ -22,15 +23,13 @@ public class SysUserController extends BaseController {
     }
 
     public void getUsers(){
-        String token = getToken();
-        String deviceImei = getDeviceImei();
+        renderJsonSuccess(UserModel.getUsersByStatus(getParam(SQLParam.STATUS),
+                getParaToInt(Param.PAGE_NUMBER, 1),
+                getParaToInt(Param.PAGE_SIZE, 10)));
+    }
 
-        int pageNumber = getParaToInt(Param.PAGE_NUMBER, 1);
-        int pageSize = getParaToInt(Param.PAGE_SIZE, 10);
-
-
-
-        renderJson(ResUtils.success(createTokenByOs(),
-                UserModel.getUsersByStatus(getParam(SQLParam.STATUS), pageNumber, pageSize)));
+    public void getRecords(){
+        renderJsonSuccess(RecordModel.getRecordsByUserId(getParaToInt(Param.PAGE_NUMBER, 1),
+                getParaToInt(Param.PAGE_SIZE, 10), null));
     }
 }

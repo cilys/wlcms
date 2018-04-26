@@ -14,23 +14,18 @@ public class RoleController extends BaseController {
     public void addRole(){
         String roleName = getParam(SQLParam.ROLE_NAME);
         if (StrUtils.isEmpty(roleName)){
-            renderJson(ResUtils.res(Param.C_ROLE_NAME_NULL,
-                    createTokenByOs(), null));
+            renderJsonFailed(Param.C_ROLE_NAME_NULL,null);
             return;
         }
         if (RoleModel.roleNameIsExist(roleName)){
-            renderJson(ResUtils.res(Param.C_ROLE_NAME_EXISTS,
-                    createTokenByOs(),
-                    null));
+            renderJsonFailed(Param.C_ROLE_NAME_EXISTS,null);
             return;
         }
         if (RoleModel.insert(roleName)){
-            renderJson(ResUtils.success(
-                    createTokenByOs(),null));
+            renderJsonSuccess(null);
             return;
         }else {
-            renderJson(ResUtils.res(Param.C_ROLE_ADD_FAILED,
-                    createTokenByOs(), null));
+            renderJsonFailed(Param.C_ROLE_ADD_FAILED,null);
             return;
         }
     }
@@ -38,17 +33,15 @@ public class RoleController extends BaseController {
     public void delRole(){
         String roleId = getParam(SQLParam.ROLE_ID);
         if (RoleModel.del(roleId)){
-            renderJson(ResUtils.success(
-                    createTokenByOs(), null));
+            renderJsonSuccess(null);
             return;
         }else {
-            renderJson(ResUtils.res(Param.C_ROLE_DEL_FAILED,
-                    createTokenByOs(), null));
+            renderJsonFailed(Param.C_ROLE_DEL_FAILED,null);
             return;
         }
     }
 
     public void getRoles(){
-        renderJson(ResUtils.success(createTokenByOs(), RoleModel.getRoles()));
+        renderJsonSuccess(RoleModel.getRoles());
     }
 }

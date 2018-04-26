@@ -19,10 +19,9 @@ public class RightRoleController extends BaseController {
      */
     public void getRoleRights(){
         String roleId = getParam(SQLParam.ROLE_ID);
-        renderJson(ResUtils.success(createTokenByOs(),
-                RightRoleModel.getRoleRightByRoleId(roleId,
+        renderJsonSuccess(RightRoleModel.getRoleRightByRoleId(roleId,
                         getParaToInt(Param.PAGE_NUMBER, 1),
-                        getParaToInt(Param.PAGE_SIZE, 10))));
+                        getParaToInt(Param.PAGE_SIZE, 10)));
     }
 
     /**
@@ -33,10 +32,9 @@ public class RightRoleController extends BaseController {
         String roleId = getParam(SQLParam.ROLE_ID);
         String rightId = getParam(SQLParam.RIGHT_ID);
         if (RightRoleModel.insert(rightId, roleId)){
-            renderJson(ResUtils.success(createTokenByOs(), null));
+            renderJsonSuccess(null);
         }else {
-            renderJson(ResUtils.res(Param.C_RIGHT_ROLE_ADD_FAILED,
-                    createTokenByOs(), null));
+            renderJsonFailed(Param.C_RIGHT_ROLE_ADD_FAILED, null);
         }
     }
 
@@ -48,10 +46,9 @@ public class RightRoleController extends BaseController {
         String roleId = getParam(SQLParam.ROLE_ID);
         String rightId = getParam(SQLParam.RIGHT_ID);
         if (RightRoleModel.delByRightIdAndRoleId(rightId, roleId)){
-            renderJson(ResUtils.success(createTokenByOs(), null));
+            renderJsonSuccess(null);
         }else {
-            renderJson(ResUtils.res(Param.C_RIGHT_ROLE_DEL_FAILED,
-                    createTokenByOs(), null));
+            renderJsonFailed(Param.C_RIGHT_ROLE_DEL_FAILED, null);
         }
     }
 }

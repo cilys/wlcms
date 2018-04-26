@@ -80,30 +80,23 @@ public class RecordModel extends Model<RecordModel> {
                 " = '", recordNum, "';")) > 0;
     }
 
-    public static Page<RecordModel> getAllRecords(int pageNumber, int pageSize){
-        if (pageNumber < 1){
-            pageNumber = 1;
-        }
-        if (pageSize < 1){
-            pageSize = 10;
-        }
-        return dao.paginate(pageNumber, pageSize, "select * ",
-                StrUtils.join(" from ", SQLParam.T_RECORD));
-    }
-
     public static Page<RecordModel> getRecordsByUserId(int pageNumber,
-                                                       int pageSize, String userId){
-        if (pageNumber < 1){
+                                                       int pageSize, String userId) {
+        if (pageNumber < 1) {
             pageNumber = 1;
         }
-        if (pageSize < 1){
+        if (pageSize < 1) {
             pageSize = 10;
         }
-        return dao.paginate(pageNumber, pageSize, "select * ",
-                StrUtils.join(" from ", SQLParam.T_RECORD,
-                        " where ", SQLParam.RECORD_CREATE_USER_ID, " = '",
-                        userId, "';"));
+        if (StrUtils.isEmpty(userId)) {
+            return dao.paginate(pageNumber, pageSize, "select * ",
+                    StrUtils.join(" from ", SQLParam.T_RECORD));
+        } else {
+            return dao.paginate(pageNumber, pageSize, "select * ",
+                    StrUtils.join(" from ", SQLParam.T_RECORD,
+                            " where ", SQLParam.RECORD_CREATE_USER_ID, " = '",
+                            userId, "';"));
+        }
     }
-
 
 }

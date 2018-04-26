@@ -64,16 +64,16 @@ public class Param {
     public final static String C_RECORD_NUM_NULL = "2103";
     public final static String C_RECORD_ADD_FAILED = "2104";
     public final static String C_RECORD_LEVEL_NULL = "2105";
-    //    public final static String C_
-    //    public final static String C_
-    //    public final static String C_
-    //    public final static String C_
-    //    public final static String C_
-    //    public final static String C_
-    //    public final static String C_
-    //    public final static String C_
-    //    public final static String C_
-    //    public final static String C_
+    public final static String C_RECORD_DEL_FAILED = "2106";
+//    public final static String C_
+//    public final static String C_
+//    public final static String C_
+//    public final static String C_
+//    public final static String C_
+//    public final static String C_
+//    public final static String C_
+//    public final static String C_
+//    public final static String C_
 
     private final static Map<String, String> failureInfo = new HashMap<>();
     static {

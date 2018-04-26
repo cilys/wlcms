@@ -24,9 +24,10 @@ public class RecordController extends BaseImagesController {
 //    @Before({RecordAddInterceptor.class})
     public void add(){
         String fileDir = PropKit.get("images_dirs_report", "/");
-        String img0 = null, img1 = null, img2 = null,
-                img3 = null, img4 = null, img5 = null,
-                img6 = null, img7 = null, img8 = null;
+//        String img0 = null, img1 = null, img2 = null,
+//                img3 = null, img4 = null, img5 = null,
+//                img6 = null, img7 = null, img8 = null;
+        String fileUrl = null;
         try {
             Map<String, String> param = getImages(fileDir);
             if (param != null && param.size() > 0){
@@ -35,42 +36,53 @@ public class RecordController extends BaseImagesController {
                 String recordLevel = param.getOrDefault(SQLParam.RECORD_LEVEL, null);
                 String recordContent = param.getOrDefault(SQLParam.RECORD_CONTENT, null);
 
-                img0 = param.getOrDefault(SQLParam.RECORD_IMG_URL_0, null);
-                img1 = param.getOrDefault(SQLParam.RECORD_IMG_URL_1, null);
-                img2 = param.getOrDefault(SQLParam.RECORD_IMG_URL_2, null);
-                img3 = param.getOrDefault(SQLParam.RECORD_IMG_URL_3, null);
-                img4 = param.getOrDefault(SQLParam.RECORD_IMG_URL_4, null);
-                img5 = param.getOrDefault(SQLParam.RECORD_IMG_URL_5, null);
-                img6 = param.getOrDefault(SQLParam.RECORD_IMG_URL_6, null);
-                img7 = param.getOrDefault(SQLParam.RECORD_IMG_URL_7, null);
-                img8 = param.getOrDefault(SQLParam.RECORD_IMG_URL_8, null);
-
-                String url = join(img0, img1, img2, img3, img4, img5, img6, img7, img8);
+//                img0 = param.getOrDefault(SQLParam.RECORD_IMG_URL_0, null);
+//                img1 = param.getOrDefault(SQLParam.RECORD_IMG_URL_1, null);
+//                img2 = param.getOrDefault(SQLParam.RECORD_IMG_URL_2, null);
+//                img3 = param.getOrDefault(SQLParam.RECORD_IMG_URL_3, null);
+//                img4 = param.getOrDefault(SQLParam.RECORD_IMG_URL_4, null);
+//                img5 = param.getOrDefault(SQLParam.RECORD_IMG_URL_5, null);
+//                img6 = param.getOrDefault(SQLParam.RECORD_IMG_URL_6, null);
+//                img7 = param.getOrDefault(SQLParam.RECORD_IMG_URL_7, null);
+//                img8 = param.getOrDefault(SQLParam.RECORD_IMG_URL_8, null);
+//
+//                String url = join(img0, img1, img2, img3, img4, img5, img6, img7, img8);
+                fileUrl = param.getOrDefault(SQLParam.RECORD_IMG_URL, null);
 
                 String userId = "670b14728ad9902aecba32e22fa4f6bd";
 
-                if (RecordModel.insert(recordName, recordNum, recordLevel, recordContent, url, userId)){
-                    renderJson(ResUtils.success(createTokenByOs(), null));
+                if (RecordModel.insert(recordName, recordNum, recordLevel, recordContent, fileUrl, userId)){
+                    renderJsonSuccess( null);
                     return;
                 }else {
-                    delFile(fileDir, img0, img1, img2, img3, img4, img5, img6, img7, img8);
-                    renderJson(ResUtils.res(Param.C_RECORD_ADD_FAILED, createTokenByOs(), null));
+                    delFile(fileDir, fileUrl);
+                    renderJsonFailed(Param.C_RECORD_ADD_FAILED,  null);
                     return;
                 }
             }else {
-                delFile(fileDir, img0, img1, img2, img3, img4, img5, img6, img7, img8);
-                renderJson(ResUtils.res(Param.C_RECORD_ADD_PARAM_NULL, createTokenByOs(), null));
+                delFile(fileDir, fileUrl);
+                renderJsonFailed(Param.C_RECORD_ADD_PARAM_NULL,  null);
                 return;
             }
         } catch (Exception e) {
-            delFile(fileDir, img0, img1, img2, img3, img4, img5, img6, img7, img8);
+            delFile(fileDir, fileUrl);
             e.printStackTrace();
-            renderJson(ResUtils.res(Param.C_SERVER_ERROR, createTokenByOs(), null));
+            renderJsonFailed(Param.C_SERVER_ERROR,  null);
         }
     }
 
-    public void del(){
+    public void getRecordsByUserId(){
+        renderJsonSuccess(RecordModel.getRecordsByUserId(getParaToInt(Param.PAGE_NUMBER, 1),
+                getParaToInt(Param.PAGE_SIZE, 10), getUserId()));
+    }
+
+    public void del() {
         String recordId = getParam(SQLParam.RECORD_ID);
+        if (RecordModel.delById(recordId)) {
+            renderJsonSuccess(null);
+        } else {
+            renderJsonFailed(Param.C_RECORD_DEL_FAILED, null);
+        }
     }
 
     private String join(String... strs){
@@ -93,13 +105,16 @@ public class RecordController extends BaseImagesController {
         return null;
     }
 
-    private void delFile(String filaDir, String... files){
-        if (files != null && files.length > 0){
-            for (String file : files){
-                if (!StrUtils.isEmpty(file)){
-                    File f = new File(filaDir + File.separator + file);
-                    if (f != null && f.exists() && f.isFile()){
-                        f.delete();
+    private void delFile(String filaDir, String fileUrl){
+        if (fileUrl != null && fileUrl.length() > 0){
+            String[] files = fileUrl.split(",");
+            if (files != null) {
+                for (String file : files) {
+                    if (!StrUtils.isEmpty(file)) {
+                        File f = new File(filaDir + File.separator + file);
+                        if (f != null && f.exists() && f.isFile()) {
+                            f.delete();
+                        }
                     }
                 }
             }

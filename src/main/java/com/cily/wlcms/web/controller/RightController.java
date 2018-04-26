@@ -18,8 +18,7 @@ public class RightController extends BaseController {
         int pageNumber = getParaToInt(Param.PAGE_NUMBER, 1);
         int pageSize = getParaToInt(Param.PAGE_SIZE, 10);
         String status = getParam(SQLParam.STATUS);
-        renderJson(ResUtils.success(createTokenByOs(),
-                RightModel.getRights(pageNumber, pageSize, status)));
+        renderJsonSuccess(RightModel.getRights(pageNumber, pageSize, status));
     }
 
     /**
@@ -39,10 +38,9 @@ public class RightController extends BaseController {
             status = SQLParam.STATUS_DISABLE;
         }
         if (RightModel.update(rightId, null, null, status)){
-            renderJson(ResUtils.success(createTokenByOs(), null));
+            renderJsonSuccess(null);
         }else {
-            renderJson(ResUtils.res(Param.C_RIGHT_STATUS_CHANGE_FAILED,
-                    createTokenByOs(), null));
+            renderJsonFailed(Param.C_RIGHT_STATUS_CHANGE_FAILED, null);
         }
     }
 }

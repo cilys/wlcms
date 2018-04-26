@@ -2,6 +2,7 @@ package com.cily.wlcms.web.controller;
 
 import com.cily.wlcms.web.conf.Param;
 import com.cily.wlcms.web.conf.SQLParam;
+import com.cily.wlcms.web.utils.ResUtils;
 import com.cily.wlcms.web.utils.TokenUtils;
 import com.jfinal.core.Controller;
 
@@ -39,5 +40,13 @@ public class BaseController extends Controller {
 //        getResponse().setHeader("Access-Control-Allow-Headers", "Content-Type,Access-Token");
         getResponse().setHeader("Access-Control-Allow-Origin", "*");
         super.renderJson(object);
+    }
+
+    public void renderJsonSuccess(Object data){
+        renderJson(ResUtils.success(createTokenByOs(), data));
+    }
+
+    public void renderJsonFailed(String code, Object data){
+        renderJson(ResUtils.res(code, createTokenByOs(), data));
     }
 }

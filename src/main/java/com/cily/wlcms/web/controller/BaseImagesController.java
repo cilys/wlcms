@@ -12,6 +12,8 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.cily.utils.base.StrUtils;
+import com.cily.wlcms.web.conf.SQLParam;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -51,7 +53,7 @@ public class BaseImagesController extends BaseController {
             //如果获取的 表单信息是普通的 文本 信息  
             if(item.isFormField()){
             	//获取用户具体输入的字符串 ，名字起得挺好，因为表单提交过来的是 字符串类型的  
-                String value = item.getString() ;  
+                String value = item.getString("UTF-8") ;
                   
                 request.setAttribute(name, value);
                 
@@ -71,7 +73,19 @@ public class BaseImagesController extends BaseController {
                 UUID uuid = UUID.randomUUID();
                 String fileName = uuid.toString().replaceAll("-", "") + fileEnd;
                 request.setAttribute(name, fileName);
-                map_result.put(name, fileName);
+                String lastImgUrl = map_result.get(name);
+                if (StrUtils.isEmpty(lastImgUrl)){
+                    lastImgUrl = fileName;
+                }else {
+                    if (lastImgUrl.endsWith(",")){
+                        lastImgUrl = lastImgUrl + "," + fileName;
+                    }else {
+                        lastImgUrl = "," + lastImgUrl + "," + fileName;
+                    }
+                }
+                map_result.put(SQLParam.RECORD_IMG_URL, lastImgUrl);
+
+//                map_result.put(name, fileName);
                 //真正写到磁盘
                 //手动写的
                 OutputStream out = new FileOutputStream(new File(filePath, fileName));
