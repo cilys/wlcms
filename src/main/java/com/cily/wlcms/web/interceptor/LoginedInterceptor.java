@@ -24,7 +24,7 @@ public class LoginedInterceptor extends BaseInterceptor {
             return;
         }
         //TODO 数据库验证token是否有效
-        String checkToken = TokenModel.checkTokenByUserId(userId, deviceImei, token);
+        String checkToken = TokenModel.checkTokenByUserId(userId, token);
         if (Param.C_SUCCESS.equals(checkToken)){
             inv.invoke();
         }else {

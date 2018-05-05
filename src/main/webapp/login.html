@@ -9,9 +9,12 @@
 		<title>登录</title>
 		<link rel="stylesheet" href="plugins/layui/css/layui.css" media="all" />
 		<link rel="stylesheet" href="css/login.css" />
-		<script type="text/javascript" src="js/jquery-3.2.1.min.js" ></script>
+		<script type="text/javascript" src="js/jquery.min.js" ></script>
 		<script type="text/javascript" src="js/conf.js" ></script>
 		<script type="text/javascript" src="js/ajax.js" ></script>
+		<script type="text/javascript" src="js/log.js" ></script>
+		<script type="text/javascript" src="js/unlogin.js" ></script>
+		<script type="text/javascript" src="js/jquery.cookie.js" ></script>
 	</head>
 
 	<body class="beg-login-bg">
@@ -54,7 +57,7 @@
 			layui.use(['layer', 'form'], function() {
 				var layer = layui.layer,
 					
-					form = layui.form();
+				form = layui.form();
 					
 				form.on('submit(login)',function(data){
 					post(getHost() + "user/login", 
@@ -66,13 +69,15 @@
 						log(res)
 						
 						if(res.code == 0){
-							location.replace("index.html");							
+							saveCookie(res.token, res.data.userId);
+							
+							href("index.html");						
 						}else{
 							layer.msg(res.msg);
 						}
 					}, function error(err){
-						log(err);
-						alert(err);
+						logE(err);
+						layer.msg(err);
 					});
 					
 					return false;

@@ -80,6 +80,35 @@ public class RecordModel extends Model<RecordModel> {
                 " = '", recordNum, "';")) > 0;
     }
 
+    public static Page<RecordModel> searchRecord(String searchText, String userId,
+                                                 int pageNumber, int pageSize){
+        if (StrUtils.isEmpty(userId)) {
+            //未查询创建者
+//            return dao.paginate(pageNumber, pageSize, "select * ",
+//                    StrUtils.join(" from ", SQLParam.T_RECORD));
+            return dao.paginate(pageNumber, pageSize, StrUtils.join("select ", SQLParam.T_USER, ".", SQLParam.USER_NAME, ", ", SQLParam.T_RECORD, ".* "),
+                    StrUtils.join(" from ", SQLParam.T_RECORD, " left join ", SQLParam.T_USER, " on ",
+                            SQLParam.T_USER, ".", SQLParam.USER_ID, " = ",
+                            SQLParam.T_RECORD, ".", SQLParam.RECORD_CREATE_USER_ID,
+                            " where ", SQLParam.RECORD_ID, " like '%", searchText, "%' or ",
+                            SQLParam.RECORD_NUM, " like '%", searchText, "%' or ",
+                            SQLParam.RECORD_NAME, " like '%", searchText, "%' or ",
+                            SQLParam.RECORD_CONTENT, " like '%", searchText, "%'"
+                    ));
+        }else {
+            return dao.paginate(pageNumber, pageSize, StrUtils.join("select ", SQLParam.T_USER, ".", SQLParam.USER_NAME, ", ", SQLParam.T_RECORD, ".* "),
+                    StrUtils.join(" from ", SQLParam.T_RECORD, " left join ", SQLParam.T_USER, " on ",
+                            SQLParam.T_USER, ".", SQLParam.USER_ID, " = ",
+                            SQLParam.T_RECORD, ".", SQLParam.RECORD_CREATE_USER_ID,
+                            " where ", SQLParam.USER_ID, " = ", userId,
+                            SQLParam.RECORD_ID, " like '%", searchText, "%' or ",
+                            SQLParam.RECORD_NUM, " like '%", searchText, "%' or ",
+                            SQLParam.RECORD_NAME, " like '%", searchText, "%' or ",
+                            SQLParam.RECORD_CONTENT, " like '%", searchText, "%'"
+                    ));
+        }
+    }
+
     public static Page<RecordModel> getRecordsByUserId(int pageNumber,
                                                        int pageSize, String userId) {
         if (pageNumber < 1) {
@@ -89,13 +118,24 @@ public class RecordModel extends Model<RecordModel> {
             pageSize = 10;
         }
         if (StrUtils.isEmpty(userId)) {
-            return dao.paginate(pageNumber, pageSize, "select * ",
-                    StrUtils.join(" from ", SQLParam.T_RECORD));
+            //未查询创建者
+//            return dao.paginate(pageNumber, pageSize, "select * ",
+//                    StrUtils.join(" from ", SQLParam.T_RECORD));
+            return dao.paginate(pageNumber, pageSize, StrUtils.join("select ", SQLParam.T_USER, ".", SQLParam.USER_NAME, ", ", SQLParam.T_RECORD, ".* "),
+                    StrUtils.join(" from ", SQLParam.T_RECORD, " left join ", SQLParam.T_USER, " on ",
+                            SQLParam.T_USER, ".", SQLParam.USER_ID, " = ", SQLParam.T_RECORD, ".", SQLParam.RECORD_CREATE_USER_ID
+                            ));
         } else {
-            return dao.paginate(pageNumber, pageSize, "select * ",
-                    StrUtils.join(" from ", SQLParam.T_RECORD,
-                            " where ", SQLParam.RECORD_CREATE_USER_ID, " = '",
-                            userId, "';"));
+//            return dao.paginate(pageNumber, pageSize, "select * ",
+//                    StrUtils.join(" from ", SQLParam.T_RECORD,
+//                            " where ", SQLParam.RECORD_CREATE_USER_ID, " = '",
+//                            userId, "'"));
+
+            return dao.paginate(pageNumber, pageSize, StrUtils.join("select ", SQLParam.T_USER, ".", SQLParam.USER_NAME, ", ", SQLParam.T_RECORD, ".* "),
+                    StrUtils.join(" from ", SQLParam.T_RECORD, " left join ", SQLParam.T_USER, " on ",
+                            SQLParam.T_USER, ".", SQLParam.USER_ID, " = ", SQLParam.T_RECORD, ".", SQLParam.RECORD_CREATE_USER_ID,
+                            " where ", SQLParam.RECORD_CREATE_USER_ID, " = '", userId, "'"
+                    ));
         }
     }
 

@@ -10,7 +10,7 @@
 		<link rel="stylesheet" href="css/table.css" />
 		<link rel="stylesheet" href="plugins/layui/css/layui.css" media="all" />
 		<script type="text/javascript" src="js/conf.js" ></script>
-		<script type="text/javascript" src="js/jquery-3.2.1.min.js" ></script>
+		<script type="text/javascript" src="js/jquery.min.js" ></script>
 		<script type="text/javascript" src="js/ajax.js" ></script>
 	</head>
 
@@ -21,15 +21,7 @@
 				<a href="javascript:;" class="layui-btn layui-btn-small" id="add">
 					<i class="layui-icon">&#xe608;</i> 添加信息
 				</a>
-				<!--<a href="#" class="layui-btn layui-btn-small" id="import">
-					<i class="layui-icon">&#xe608;</i> 导入信息
-				</a>
-				<a href="#" class="layui-btn layui-btn-small">
-					<i class="fa fa-shopping-cart" aria-hidden="true"></i> 导出信息
-				</a>
-				<a href="#" class="layui-btn layui-btn-small" id="getSelected">
-					<i class="fa fa-shopping-cart" aria-hidden="true"></i> 获取全选信息
-				</a>-->
+				
 				<a href="javascript:;" class="layui-btn layui-btn-small" id="search">
 					<i class="layui-icon">&#xe615;</i> 搜索
 				</a>
@@ -42,7 +34,7 @@
 							<tr>
 								<th style="width: 30px;"><input type="checkbox" lay-filter="allselector" lay-skin="primary"></th>
 								<th>姓名</th>
-								<th>年龄</th>
+								<th>密码</th>
 								<th>创建时间</th>
 								<th>操作</th>
 							</tr>
@@ -67,7 +59,7 @@
 				<td>{{ item.createTime }}</td>
 				<td>
 					<a href="/detail-1" target="_blank" class="layui-btn layui-btn-normal layui-btn-mini">预览</a>
-					<a href="javascript:;" data-name="{{ item.name }}" data-opt="edit" class="layui-btn layui-btn-mini">编辑</a>
+					<a href="javascript:;" data-name="{{ item.userName }}" data-opt="edit" class="layui-btn layui-btn-mini">编辑</a>
 					<a href="javascript:;" data-id="1" data-opt="del" class="layui-btn layui-btn-danger layui-btn-mini">删除</a>
 				</td>
 			</tr>
@@ -222,7 +214,6 @@
 										
 									}, function error(err){
 										layer.msg("添加用户失败...");
-										
 									});
 									
 									return false;

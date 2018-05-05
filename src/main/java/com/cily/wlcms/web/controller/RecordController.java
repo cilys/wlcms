@@ -3,9 +3,7 @@ package com.cily.wlcms.web.controller;
 import com.cily.utils.base.StrUtils;
 import com.cily.wlcms.web.conf.Param;
 import com.cily.wlcms.web.conf.SQLParam;
-import com.cily.wlcms.web.interceptor.DeviceImeiInterceptor;
-import com.cily.wlcms.web.interceptor.LogInterceptor;
-import com.cily.wlcms.web.interceptor.RecordAddInterceptor;
+import com.cily.wlcms.web.interceptor.*;
 import com.cily.wlcms.web.model.RecordModel;
 import com.cily.wlcms.web.utils.ResUtils;
 import com.jfinal.aop.Before;
@@ -21,7 +19,7 @@ import java.util.Map;
 @Clear({DeviceImeiInterceptor.class, LogInterceptor.class})
 public class RecordController extends BaseImagesController {
 
-//    @Before({RecordAddInterceptor.class})
+    @Before({RecordAddInterceptor.class})
     public void add(){
         String fileDir = PropKit.get("images_dirs_report", "/");
 //        String img0 = null, img1 = null, img2 = null,
@@ -71,11 +69,23 @@ public class RecordController extends BaseImagesController {
         }
     }
 
+    @Before({UserIdInterceptor.class})
     public void getRecordsByUserId(){
+        String userId = getParam(SQLParam.USER_ID);
         renderJsonSuccess(RecordModel.getRecordsByUserId(getParaToInt(Param.PAGE_NUMBER, 1),
-                getParaToInt(Param.PAGE_SIZE, 10), getUserId()));
+                getParaToInt(Param.PAGE_SIZE, 10), userId));
     }
 
+    //userId不为空，查自己的。为空，则查任何人的
+    @Before({SearchInterceptor.class})
+    public void searchRecords(){
+        renderJsonSuccess(RecordModel.searchRecord(getParam(Param.SEARCH_TEXT),
+                getParam(SQLParam.USER_ID),
+                getParaToInt(Param.PAGE_NUMBER, 1),
+                getParaToInt(Param.PAGE_SIZE, 10)));
+    }
+
+    @Before({RecordIdInterceptor.class, RecordDelInterceptor.class})
     public void del() {
         String recordId = getParam(SQLParam.RECORD_ID);
         if (RecordModel.delById(recordId)) {
@@ -120,5 +130,4 @@ public class RecordController extends BaseImagesController {
             }
         }
     }
-
 }

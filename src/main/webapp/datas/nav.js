@@ -98,28 +98,12 @@ var navs = [{
 	"icon": "fa-cubes",
 	"spread": true,
 	"children": [{
-		"title": "按钮",
-		"icon": "&#xe641;",
-		"href": "button.html"
-	}, {
-		"title": "表单",
-		"icon": "&#xe63c;",
-		"href": "form.html"
-	}, {
 		"title": "用户列表",
 		"icon": "&#xe63c;",
-		"href": "table.html"
+		"href": "users.html"
 	}, {
-		"title": "角色列表",
+		"title": "发布列表",
 		"icon": "&#xe63c;",
-		"href": "roles.html"
-	}, {
-		"title": "导航",
-		"icon": "&#xe609;",
-		"href": "nav.html"
-	}, {
-		"title": "辅助性元素",
-		"icon": "&#xe60c;",
-		"href": "auxiliar.html"
+		"href": "records.html"
 	}]
 }];

@@ -81,6 +81,9 @@ public class UserModel extends Model<UserModel> {
         if (!StrUtils.isEmpty(phone)){
             um.set(SQLParam.PHONE, phone);
         }
+        if (!StrUtils.isEmpty(idCard)){
+            um.set(SQLParam.ID_CARD, idCard);
+        }
         if (!StrUtils.isEmpty(address)){
             um.set(SQLParam.ADDRESS, address);
         }
@@ -114,7 +117,7 @@ public class UserModel extends Model<UserModel> {
         return true;
     }
 
-    public static Page<UserModel> getUsersByStatus(String status, int pageNumber, int pageSize){
+    public static Page<UserModel> getUsersByStatus(String status, int pageNumber, int pageSize, String desc){
         if (pageSize < 1){
             pageSize = 10;
         }
@@ -122,11 +125,35 @@ public class UserModel extends Model<UserModel> {
             pageNumber = 1;
         }
 
+        if (StrUtils.isEmpty(desc)){
+            desc = "DESC";
+        }
+
         if (SQLParam.STATUS_ENABLE.equals(status) || SQLParam.STATUS_DISABLE.equals(status)){
-            String sql = StrUtils.join(" from ", SQLParam.T_USER," where ", SQLParam.STATUS, " = '" + status + "'");
+            String sql = StrUtils.join(" from ", SQLParam.T_USER," where ", SQLParam.STATUS, " = '", status, "' order by ", SQLParam.CREATE_TIME, " ", desc);
             return dao.paginate(pageNumber, pageSize, "select * ", sql);
         }else {
-            return dao.paginate(pageNumber, pageSize, "select * ", " from " + SQLParam.T_USER);
+            return dao.paginate(pageNumber, pageSize, "select * ", " from " + SQLParam.T_USER + " order by " + SQLParam.CREATE_TIME + " " + desc);
         }
+    }
+
+    public static boolean delByUserId(String userId){
+        return dao.deleteById(userId);
+    }
+
+    public static  Page<UserModel> searchUser(int pageNumber, int pageSize, String searchText){
+        if (pageSize < 1){
+            pageSize = 10;
+        }
+        if (pageNumber < 1){
+            pageNumber = 1;
+        }
+
+        String sql = StrUtils.join(" from ", SQLParam.T_USER," where ",
+                SQLParam.USER_ID, " like '%", searchText, "%' or ",
+                SQLParam.USER_NAME, " like '%", searchText, "%' or ",
+                SQLParam.REAL_NAME, " like '%", searchText, "%' order by ", SQLParam.CREATE_TIME, " DESC");
+
+        return dao.paginate(pageNumber, pageSize, "select * ", sql);
     }
 }

@@ -3,6 +3,7 @@ package com.cily.wlcms.web.model;
 import com.cily.wlcms.web.conf.Param;
 import com.cily.wlcms.web.conf.SQLParam;
 import com.cily.utils.base.StrUtils;
+import com.cily.wlcms.web.utils.TokenUtils;
 import com.jfinal.kit.PropKit;
 import com.jfinal.plugin.activerecord.Model;
 
@@ -35,7 +36,6 @@ public class TokenModel extends Model<TokenModel> {
     }
 
     public static String checkTokenByUserId(String userId,
-                                            String deviceImei,
                                             String token){
         TokenModel m = dao.findById(SQLParam.USER_ID);
 

@@ -13,6 +13,7 @@ public class Param {
 
     public final static String PAGE_NUMBER = "pageNumber";
     public final static String PAGE_SIZE = "pageSize";
+    public final static String SEARCH_TEXT = "searchText";
 
 
     //错误码规则：0成功；1~99系统错误；1001~1999用户相关错误
@@ -20,11 +21,26 @@ public class Param {
 
     public final static String C_SERVER_ERROR = "11";
 
-    public final static String C_USER_NOT_LOGIN = "1002";
+    public final static String C_404 = "404";
+    public final static String C_500 = "500";
+
     public final static String C_USER_NOT_EXIST = "1001";
+    public final static String C_USER_NOT_LOGIN = "1002";
     public final static String C_USER_LOGIN_ON_OTHER = "1003";
     public final static String C_USER_OR_PWD_ERROR = "1006";
     public final static String C_USER_NAME_NULL = "1011";
+    public final static String C_USER_NAME_ILLAGLE = "1012";
+
+    public final static String C_USER_DEL_FAILED = "1021";
+
+    public final static String C_PWD_NULL = "1031";
+    public final static String C_PWD_ILLAGLE = "1032";
+
+    public final static String C_REAL_NAME_TOO_LONG = "1041";
+
+    public final static String C_PHONE_ILLAGLE = "1051";
+
+    public final static String C_ID_CARD_ILLAGLE = "1061";
 
 
     public final static String C_RESIGT_USER_EXISTS = "1101";
@@ -65,10 +81,13 @@ public class Param {
     public final static String C_RECORD_ADD_FAILED = "2104";
     public final static String C_RECORD_LEVEL_NULL = "2105";
     public final static String C_RECORD_DEL_FAILED = "2106";
-//    public final static String C_
-//    public final static String C_
-//    public final static String C_
-//    public final static String C_
+    public final static String C_RECORD_ID_NULL = "2111";
+    public final static String C_RECORD_ID_NOT_EXIST = "2112";
+    public final static String C_NO_RIGHT_DEL_OTHER_USER_ROCORD = "2121";
+
+    public final static String C_SEARCH_TEXT_NULL = "3001";
+    public final static String C_SEARCH_TEXT_TOO_LONG = "3002";
+
 //    public final static String C_
 //    public final static String C_
 //    public final static String C_
@@ -76,6 +95,7 @@ public class Param {
 //    public final static String C_
 
     private final static Map<String, String> failureInfo = new HashMap<>();
+
     static {
         failureInfo.put(C_SUCCESS, "操作成功");
         failureInfo.put(C_SERVER_ERROR, "系统内部异常");
@@ -112,18 +132,20 @@ public class Param {
         failureInfo.put(C_RECORD_NUM_NULL, "编号为空");
         failureInfo.put(C_RECORD_LEVEL_NULL, "等级为空");
         failureInfo.put(C_RECORD_ADD_FAILED, "发布物料信息失败");
-//        failureInfo.put(, );
-//        failureInfo.put(, );
-//        failureInfo.put(, );
-//        failureInfo.put(, );
-//        failureInfo.put(, );
-//        failureInfo.put(, );
-//        failureInfo.put(, );
-//        failureInfo.put(, );
-//        failureInfo.put(, );
-//        failureInfo.put(, );
-//        failureInfo.put(, );
-//        failureInfo.put(, );
+        failureInfo.put(C_USER_DEL_FAILED, "删除用户失败");
+        failureInfo.put(C_USER_NAME_ILLAGLE, "用户名必须是2至30位的字母或数字或中划线或下划线");
+        failureInfo.put(C_PWD_NULL, "密码为空");
+        failureInfo.put(C_PWD_ILLAGLE, "密码不合法");
+
+        failureInfo.put(C_404, "找不到路径");
+        failureInfo.put(C_500, "系统内部异常");
+        failureInfo.put(C_PHONE_ILLAGLE, "手机号码不合法");
+        failureInfo.put(C_ID_CARD_ILLAGLE, "身份证号不合法");
+        failureInfo.put(C_SEARCH_TEXT_NULL, "待搜索的内容为空");
+        failureInfo.put(C_SEARCH_TEXT_TOO_LONG, "搜索内容过长");
+        failureInfo.put(C_RECORD_ID_NULL, "物料id为空");
+        failureInfo.put(C_RECORD_ID_NOT_EXIST, "物料信息不存在");
+        failureInfo.put(C_NO_RIGHT_DEL_OTHER_USER_ROCORD, "无权删除其他人的发布");
 //        failureInfo.put(, );
 //        failureInfo.put(, );
 //        failureInfo.put(, );
@@ -140,10 +162,13 @@ public class Param {
 //        failureInfo.put(, );
 //        failureInfo.put(, );
     }
-    public final static String getMsg(String code){
-        if (StrUtils.isEmpty(code)){
+
+    public final static String getMsg(String code) {
+        if (StrUtils.isEmpty(code)) {
             code = C_SERVER_ERROR;
         }
         return failureInfo.get(code);
     }
+
+    public final static String REGX_PHONE = "1[0-9]{10}";
 }

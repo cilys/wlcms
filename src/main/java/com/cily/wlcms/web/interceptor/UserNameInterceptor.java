@@ -1,5 +1,6 @@
 package com.cily.wlcms.web.interceptor;
 
+import com.cily.utils.web.base.IpUtils;
 import com.cily.wlcms.web.conf.Param;
 import com.cily.wlcms.web.conf.SQLParam;
 import com.cily.wlcms.web.utils.ResUtils;
@@ -14,18 +15,14 @@ public class UserNameInterceptor extends BaseInterceptor {
     @Override
     public void intercept(Invocation inv) {
         String userName = getParam(inv, SQLParam.USER_NAME, null);
-        String deviceImei = getDeviceImeiFromAttr(inv);
-        String userId = getParam(inv, SQLParam.USER_ID, null);
-
-        if (StrUtils.isEmpty(deviceImei)){
-            //客户端ip
-
-        }
-        String token = getToken(inv);
 
         if (StrUtils.isEmpty(userName)){
             renderJson(inv, Param.C_USER_NAME_NULL, createTokenByOs(inv),null);
         }else {
+            if (!userName.matches("[(A-Z)|(0-9)|(a-z)|(-)|(_)]{2,32}")){
+                renderJson(inv, Param.C_USER_NAME_ILLAGLE, createTokenByOs(inv), null);
+                return;
+            }
             inv.invoke();
         }
     }

@@ -2,6 +2,7 @@ package com.cily.wlcms.web.utils;
 
 import com.cily.wlcms.web.conf.Param;
 import com.cily.wlcms.web.conf.SQLParam;
+import com.cily.wlcms.web.controller.BaseController;
 import com.cily.wlcms.web.model.UserModel;
 import com.cily.utils.base.StrUtils;
 import com.jfinal.core.Controller;
@@ -11,7 +12,7 @@ import com.jfinal.core.Controller;
  */
 public class UserUtils {
 
-    public static void regist(Controller c, String userId, String status){
+    public static void regist(BaseController c, String userId, String status){
         if(c == null){
             throw new NullPointerException("The Controller is null.");
         }
@@ -47,7 +48,7 @@ public class UserUtils {
         }
     }
 
-    public static void updateUserInfo(Controller c, String userId, String status){
+    public static void updateUserInfo(BaseController c, String userId, String status){
         if(c == null){
             throw new NullPointerException("The Controller is null.");
         }

@@ -1,14 +1,10 @@
 package com.cily.wlcms.web;
 
 import com.cily.wlcms.web.conf.SQLParam;
-import com.cily.wlcms.web.controller.RecordController;
-import com.cily.wlcms.web.controller.RoleController;
-import com.cily.wlcms.web.controller.SysUserController;
-import com.cily.wlcms.web.controller.UserController;
+import com.cily.wlcms.web.controller.*;
 import com.cily.wlcms.web.interceptor.DeviceImeiInterceptor;
 import com.cily.wlcms.web.interceptor.LogInterceptor;
 import com.cily.wlcms.web.model.*;
-import com.cily.utils.base.StrUtils;
 import com.jfinal.config.*;
 import com.jfinal.kit.PropKit;
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
@@ -26,6 +22,7 @@ public class Conf extends JFinalConfig {
 
     @Override
     public void configRoute(Routes me) {
+        me.add("/", IndexController.class);
         me.add("user", UserController.class);
         me.add("sysUser", SysUserController.class);
         me.add("role", RoleController.class);
@@ -52,6 +49,7 @@ public class Conf extends JFinalConfig {
 //                StrUtils.join(SQLParam.RIGHT_ID, ",",
 //                        SQLParam.ROLE_ID), RightRoleModel.class);
 //        arp.addMapping(SQLParam.T_ROLE, SQLParam.ROLE_ID, RoleModel.class);
+//        arp.addMapping(SQLParam.T_USER_ROLE, SQLParam.USER_ID + "," + SQLParam.ROLE_ID, UserRoleModel.class);
         arp.addMapping(SQLParam.T_RECORD, SQLParam.RECORD_ID, RecordModel.class);
     }
 

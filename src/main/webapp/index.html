@@ -15,6 +15,15 @@
 		<link rel="stylesheet" href="plugins/layui/css/layui.css" media="all" />
 		<link rel="stylesheet" href="css/global.css" media="all">
 		<link rel="stylesheet" href="plugins/font-awesome/css/font-awesome.min.css">
+		
+		<script type="text/javascript" src="js/str.js" ></script>
+		
+		<script type="text/javascript" src="js/jquery.min.js" ></script>
+		<script type="text/javascript" src="js/unlogin.js" ></script>
+		<script type="text/javascript" src="js/ajax.js" ></script>
+		<script type="text/javascript" src="js/jquery.cookie.js" ></script>
+		<script type="text/javascript" src="js/log.js" ></script>
+		<script type="text/javascript" src="js/toast.js" ></script>
 
 	</head>
 
@@ -35,17 +44,10 @@
 					</div>
 					<ul class="layui-nav admin-header-item">
 						
-                        <li class="layui-nav-item" id="pay">
-                            <a href="javascript:;">捐赠我</a>
-                        </li>
-						
-						<li class="layui-nav-item" id="video1">
-							<a href="javascript:;">视频</a>
-						</li>
 						<li class="layui-nav-item">
 							<a href="javascript:;" class="admin-header-user">
 								<img src="images/0.jpg" />
-								<span>beginner</span>
+								<span></span>
 							</a>
 							<dl class="layui-nav-child">
 								<dd>
@@ -54,22 +56,14 @@
 								<dd>
 									<a href="javascript:;"><i class="fa fa-gear" aria-hidden="true"></i> 设置</a>
 								</dd>
-								<dd id="lock">
-									<a href="javascript:;">
-										<i class="fa fa-lock" aria-hidden="true" style="padding-right: 3px;padding-left: 1px;"></i> 锁屏 (Alt+L)
-									</a>
-								</dd>
+								
 								<dd>
-									<a href="login.html"><i class="fa fa-sign-out" aria-hidden="true"></i> 注销</a>
+									<a id="a_logout"><i class="fa fa-sign-out" aria-hidden="true"></i> 注销</a>
 								</dd>
 							</dl>
 						</li>
 					</ul>
-					<ul class="layui-nav admin-header-item-mobile">
-						<li class="layui-nav-item">
-							<a href="login.html"><i class="fa fa-sign-out" aria-hidden="true"></i> 注销</a>
-						</li>
-					</ul>
+					
 				</div>
 			</div>
 			<div class="layui-side layui-bg-black" id="admin-side">
@@ -119,6 +113,15 @@
 			<script type="text/javascript" src="datas/nav.js"></script>
 			<script src="js/index.js"></script>
 			<script>
+				if(loginInfoEmpty()){
+					href("login.html");
+				}
+				
+				$("#a_logout").click(function(){
+					clearCookie();
+					history.replaceState("", "", location.href = "login.html");
+				});
+			
 				layui.use('layer', function() {
 					var $ = layui.jquery,
 						layer = layui.layer;
