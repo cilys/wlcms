@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>Table</title>
+		<link rel="stylesheet" href="plugins/layui/css/layui.css" media="all" />
+		<link rel="stylesheet" href="css/global.css" media="all">
+		<link rel="stylesheet" href="plugins/font-awesome/css/font-awesome.min.css">
+		<link rel="stylesheet" href="css/table.css" />
+		<link rel="stylesheet" href="plugins/layui/css/layui.css" media="all" />
+		<script type="text/javascript" src="js/conf.js" ></script>
+		<script type="text/javascript" src="plugins/layui/layui.js"></script>
+		<script type="text/javascript" src="js/jquery.min.js" ></script>
+		
+		<script type="text/javascript" src="js/str.js" ></script>
+		<script type="text/javascript" src="js/log.js" ></script>
+		<script type="text/javascript" src="js/unlogin.js" ></script>
+		<script type="text/javascript" src="js/ajax.js" ></script>
+		<script type="text/javascript" src="js/jquery.cookie.js" ></script>
+		<script type="text/javascript" src="js/users.js" ></script>
+		<script type="text/javascript" src="js/toast.js" ></script>
+	</head>
+
+	<body>
+		<div class="admin-main">
+			<blockquote class="layui-elem-quote">
+				<!--<form class="layui-form" >-->
+					<div class="layui-form-item">
+						<div class="layui-input-inline">
+							<input type="text" id="selectValue" required lay-verify="required" placeholder="用户id、用户名、真实姓名" autocomplete="off" class="layui-input">
+					    </div>
+				    	<a class="layui-btn" id="selectButton" lay-submit lay-filter="search">
+				    		<i class="layui-icon">&#xe615;</i> 搜索
+				    	</a>
+				    	<a href="javascript:;" class="layui-btn" id="add">
+							<i class="layui-icon">&#xe608;</i> 添加信息
+						</a>
+						<a href="javascript:;" class="layui-btn" id="clearSearch">
+							<i class="layui-icon">&#xe640;</i> 清除搜索
+						</a>
+						<a href="javascript:;" class="layui-btn" id="a_reload">
+							<i class="layui-icon">&#x1002;</i> 重新加载
+						</a>
+					</div>
+				<!--</form>-->
+				
+			</blockquote>
+			
+			<fieldset class="layui-elem-field">
+				<div class="layui-field-box layui-form">
+					<table class="layui-table admin-table" id="t_customerInfo">
+						
+					</table>
+				</div>
+			</fieldset>
+			<div class="admin-table-page">
+				<div id="paged" class="page"></div>
+			</div>
+		</div>
+	</body>
+</html>
