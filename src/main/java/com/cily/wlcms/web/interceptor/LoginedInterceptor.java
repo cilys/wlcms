@@ -24,11 +24,11 @@ public class LoginedInterceptor extends BaseInterceptor {
             return;
         }
         //TODO 数据库验证token是否有效
-        String checkToken = TokenModel.checkTokenByUserId(userId, token);
-        if (Param.C_SUCCESS.equals(checkToken)){
+        String checkTokenResult = TokenModel.checkTokenByUserId(userId, token);
+        if (Param.C_SUCCESS.equals(checkTokenResult)){
             inv.invoke();
         }else {
-            renderJson(inv, checkToken, null, null);
+            renderJson(inv, checkTokenResult, null, null);
             return;
         }
     }

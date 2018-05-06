@@ -14,6 +14,7 @@ public class Param {
     public final static String PAGE_NUMBER = "pageNumber";
     public final static String PAGE_SIZE = "pageSize";
     public final static String SEARCH_TEXT = "searchText";
+    public final static String OS_TYPE = "osType";
 
 
     //错误码规则：0成功；1~99系统错误；1001~1999用户相关错误
@@ -171,4 +172,7 @@ public class Param {
     }
 
     public final static String REGX_PHONE = "1[0-9]{10}";
+    public final static String REQUEST_SOURCE_WEB = "1";
+    public final static String REQUEST_SOURCE_ANDROID = "2";
+    public final static String REQUEST_SOURCE_IOS = "3";
 }

@@ -4,6 +4,7 @@ import com.cily.wlcms.web.conf.Param;
 import com.cily.wlcms.web.conf.SQLParam;
 import com.cily.wlcms.web.interceptor.*;
 import com.cily.wlcms.web.model.UserModel;
+import com.cily.wlcms.web.utils.RootUserIdUtils;
 import com.cily.wlcms.web.utils.UserUtils;
 import com.cily.wlcms.web.utils.ResUtils;
 import com.cily.wlcms.web.utils.TokenUtils;
@@ -31,8 +32,19 @@ public class UserController extends BaseController {
         }
         if (pwd.equals(um.get(SQLParam.PWD))){
             um.remove(SQLParam.PWD);
-            String token = TokenUtils.createToken(um.get(SQLParam.USER_ID), deviceImei, null);
-            renderJson(ResUtils.success(token, um));
+
+            if (Param.REQUEST_SOURCE_WEB.equals(getHeader(Param.OS_TYPE))) {
+                if (RootUserIdUtils.isRootUser(um.get(SQLParam.USER_ID))) {
+                    String token = TokenUtils.createToken(um.get(SQLParam.USER_ID), deviceImei, null);
+                    renderJson(ResUtils.success(token, um));
+                    return;
+                }else {
+                    renderJsonFailed(Param.C_RIGHT_LOW, null);
+                }
+            }else {
+                String token = TokenUtils.createToken(um.get(SQLParam.USER_ID), deviceImei, null);
+                renderJson(ResUtils.success(token, um));
+            }
             return;
         }else {
             renderJson(ResUtils.res(Param.C_USER_OR_PWD_ERROR, null, null));

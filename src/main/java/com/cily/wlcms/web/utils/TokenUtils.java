@@ -24,9 +24,10 @@ public class TokenUtils {
         }else {
             if (StrUtils.isEmpty(token)){
                 String newToken = deviceImei + UUIDUtils.getUUID();
-                TokenModel.updateByUserId(userId, token);
+                TokenModel.updateByUserId(userId, newToken);
                 return newToken;
             }else {
+                TokenModel.updateByUserId(userId, token);
                 return token;
             }
         }

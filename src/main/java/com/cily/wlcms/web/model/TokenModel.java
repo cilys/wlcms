@@ -53,7 +53,6 @@ public class TokenModel extends Model<TokenModel> {
                     return Param.C_USER_NOT_LOGIN;
                 }else {
                     if (to.equals(token)){
-                        updateByUserId(userId, token);
                         return Param.C_SUCCESS;
                     }else {
                         deleteByUserId(userId);
