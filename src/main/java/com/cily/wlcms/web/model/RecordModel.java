@@ -13,7 +13,7 @@ import java.util.List;
  * Created by admin on 2018/4/16.
  */
 public class RecordModel extends Model<RecordModel> {
-    private static RecordModel dao = new RecordModel();
+    private static RecordModel dao = new RecordModel().dao();
 
     public static boolean insert(String recordName, String recordNum,
                                  String recordLevel, String recordContent,

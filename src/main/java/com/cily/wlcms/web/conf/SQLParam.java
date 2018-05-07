@@ -12,6 +12,7 @@ public interface SQLParam {
     String T_PROJECT = "t_project";
     String T_USER_PROJECT = "t_user_project";
     String T_RECORD = "t_record";
+    String T_TOKEN = "t_token";
 
 
     String USER_ID = "userId";

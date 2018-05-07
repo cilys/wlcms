@@ -7,6 +7,8 @@ function post(url, data, sus, err){
 		dataType: 'json',
 		beforeSend:function(request){
 			request.setRequestHeader("osType", "1");
+			request.setRequestHeader("userId", window.localStorage.getItem("userId"));
+			request.setRequestHeader("token", window.localStorage.getItem("token"));
 		},
 		success: function(re){
 			if(login(re)){

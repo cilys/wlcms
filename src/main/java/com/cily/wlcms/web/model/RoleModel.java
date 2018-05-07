@@ -11,7 +11,7 @@ import java.util.List;
  * Created by admin on 2018/2/22.
  */
 public class RoleModel extends Model<RoleModel> {
-    private static RoleModel dao = new RoleModel();
+    private static RoleModel dao = new RoleModel().dao();
 
     public static boolean insert(String roleName){
         if (StrUtils.isEmpty(roleName)){

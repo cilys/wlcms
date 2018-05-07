@@ -50,6 +50,7 @@ public abstract class BaseInterceptor implements Interceptor {
     protected void renderJson(Invocation inv, Object o){
         if (inv != null ){
             inv.getController().getResponse().setHeader("Access-Control-Allow-Origin", "*");
+            inv.getController().getResponse().setHeader("Access-Control-Allow-Headers", "osType, userId, token, Content-Type, Accept");
             inv.getController().renderJson(o);
         }
     }

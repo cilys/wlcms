@@ -4,6 +4,7 @@ import com.cily.wlcms.web.conf.SQLParam;
 import com.cily.wlcms.web.controller.*;
 import com.cily.wlcms.web.interceptor.DeviceImeiInterceptor;
 import com.cily.wlcms.web.interceptor.LogInterceptor;
+import com.cily.wlcms.web.interceptor.LoginedInterceptor;
 import com.cily.wlcms.web.model.*;
 import com.jfinal.config.*;
 import com.jfinal.kit.PropKit;
@@ -51,13 +52,14 @@ public class Conf extends JFinalConfig {
 //        arp.addMapping(SQLParam.T_ROLE, SQLParam.ROLE_ID, RoleModel.class);
 //        arp.addMapping(SQLParam.T_USER_ROLE, SQLParam.USER_ID + "," + SQLParam.ROLE_ID, UserRoleModel.class);
         arp.addMapping(SQLParam.T_RECORD, SQLParam.RECORD_ID, RecordModel.class);
+        arp.addMapping(SQLParam.T_TOKEN, SQLParam.USER_ID, TokenModel.class);
     }
 
     @Override
     public void configInterceptor(Interceptors me) {
         me.add(new LogInterceptor());
         me.add(new DeviceImeiInterceptor());
-//        me.add(new LoginedInterceptor());
+        me.add(new LoginedInterceptor());
 //        me.add(new RightInterceptor());
     }
 
