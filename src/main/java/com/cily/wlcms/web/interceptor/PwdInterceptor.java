@@ -13,7 +13,8 @@ public class PwdInterceptor extends BaseInterceptor {
     public void intercept(Invocation inv) {
         String pwd = getParam(inv, SQLParam.PWD);
         if (StrUtils.isEmpty(pwd)){
-            renderJson(inv, Param.C_PWD_NULL, createTokenByOs(inv), null);
+//            renderJson(inv, Param.C_PWD_NULL, createTokenByOs(inv), null);
+            inv.invoke();
             return;
         }
         if (pwd.length() > 32){

@@ -13,6 +13,7 @@
 		<script type="text/javascript" src="js/unlogin.js" ></script>
 		<script type="text/javascript" src="js/ajax.js" ></script>
 		<script type="text/javascript" src="js/jquery.cookie.js" ></script>
+		<script type="text/javascript" src="js/conf.js" ></script>
 	</head>
 
 	<body>
@@ -27,6 +28,13 @@
                             <p>1、欢迎来到物料发布系统</p>
                             <p>2、本系统包括用户管理系统</p>
                             <p>3、本系统还包括物料管理系统</p>
+                            <p></p>
+                            <p id="p_user_count">4、用户总数：</p>
+                            <p id="p_user_enable">5、可用用户：</p>
+                            <p id="p_user_disable">6、禁用用户：</p>
+                            <p id="p_record_count">7、发布总数：</p>
+                            <p id="p_record_enable">8、可用发布：</p>
+                            <p id="p_record_disable">9、禁用发布：</p>
                         </div>
                     </fieldset>
 				</div>
@@ -35,8 +43,48 @@
 	</body>
 
 	<script type="text/javascript">
+		getUserCount();
+		log("getUserCount");
+		getRecordCount();
+		log("getRecordCount");
+		
 		if(unlogin()){
 			
+		}
+		
+		function getUserCount(){
+			post(getHost() + "sysUser/getUserCount", null, function success(res){
+				
+				var enableUser = res.data.enableUserCount;
+				var disableUserCount = res.data.disableUserCount;
+				log("getUserCount enableUser = " + enableUser);
+				log("getUserCount disableUserCount = " + disableUserCount);
+				var s = "4、用户:\n总数：" + (enableUser + disableUserCount) 
+					+ "\n启用：" + enableUser + "\n禁用：" + disableUserCount;
+				log(s);
+				$("#p_user_count").text("4、用户总数：" + (enableUser + disableUserCount));
+				$("#p_user_enable").text("5、可用用户：" + enableUser);
+				$("#p_user_disable").text("6、禁用用户：" + disableUserCount);
+			}, function error(err){
+				log("获取用户数量失败");
+				logErr("获取用户数量失败：" + err);
+			});
+		}
+		function getRecordCount(){
+			post(getHost() + "sysUser/getRecordCount", null, function success(res){
+				var enableRecord = res.data.enableRecordCount;
+				var disenableRecord = res.data.disenableRecordCount;
+				log("getRecordCount enableRecord = " + enableRecord);
+				log("getRecordCount disenableRecord = " + disenableRecord);
+				var s = "5、发布:\n总数：" + (enableRecord + disenableRecord) 
+					+ "正常：\n" + disenableRecord + "禁用：\n" + disenableRecord;
+				$("#p_record_count").text("7、发布总数：" + (enableRecord + disenableRecord));
+				$("#p_record_enable").text("5、可用用户：" + enableRecord);
+				$("#p_record_disable").text("6、禁用用户：" + disenableRecord);
+			}, function error(err){
+				log("获取发布数量失败");
+				logErr("获取发布数量失败：" + err);
+			});
 		}
 	</script>
 

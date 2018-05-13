@@ -15,6 +15,7 @@ function post(url, data, sus, err){
 				sus(re);
 			}else{
 				log("未登陆或登陆已过期")
+				pHref("./login.html");
 			}
 		},
 		error: function(er){

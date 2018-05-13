@@ -17,7 +17,9 @@ public class UserNameInterceptor extends BaseInterceptor {
         String userName = getParam(inv, SQLParam.USER_NAME, null);
 
         if (StrUtils.isEmpty(userName)){
-            renderJson(inv, Param.C_USER_NAME_NULL, createTokenByOs(inv),null);
+//            renderJson(inv, Param.C_USER_NAME_NULL, createTokenByOs(inv),null);
+            inv.invoke();
+            return;
         }else {
             if (!userName.matches("[(A-Z)|(0-9)|(a-z)|(-)|(_)]{2,32}")){
                 renderJson(inv, Param.C_USER_NAME_ILLAGLE, createTokenByOs(inv), null);

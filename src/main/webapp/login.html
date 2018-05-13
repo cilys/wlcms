@@ -28,13 +28,13 @@
 						<label class="beg-login-icon">
                         <i class="layui-icon">&#xe612;</i>
                     </label>
-						<input type="text" id="userName" name="userName" lay-verify="required" autocomplete="off" placeholder="这里输入登录名" class="layui-input">
+						<input type="text" id="userName" name="userName" lay-verify="required" autocomplete="off" placeholder="请输入用户名" class="layui-input" autofocus="autofocus">
 					</div>
 					<div class="layui-form-item">
 						<label class="beg-login-icon">
                         <i class="layui-icon">&#xe642;</i>
                     </label>
-						<input type="password" id="pwd"  name="password" lay-verify="password|required" autocomplete="off" placeholder="这里输入密码" class="layui-input">
+						<input type="password" id="pwd"  name="password" lay-verify="password|required" autocomplete="off" placeholder="请输入密码" class="layui-input">
 					</div>
 					<div class="layui-form-item">
 						<!--<div class="beg-pull-left beg-login-remember">
@@ -54,6 +54,9 @@
 		</div>
 		<script type="text/javascript" src="plugins/layui/layui.js"></script>
 		<script>
+			$("#userName").val(getUserName());
+			$("#pwd").val(getPwd());
+		
 			layui.use(['layer', 'form'], function() {
 				var layer = layui.layer,
 					
@@ -69,6 +72,7 @@
 						log(res)
 						
 						if(res.code == 0){
+							saveLoginInfo($("#userName").val(), $("#pwd").val());
 							saveCookie(res.token, res.data.userId);
 							
 							href("index.html");						

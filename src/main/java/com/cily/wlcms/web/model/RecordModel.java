@@ -13,7 +13,7 @@ import java.util.List;
  * Created by admin on 2018/4/16.
  */
 public class RecordModel extends Model<RecordModel> {
-    private static RecordModel dao = new RecordModel().dao();
+    private static RecordModel dao = new RecordModel();
 
     public static boolean insert(String recordName, String recordNum,
                                  String recordLevel, String recordContent,
@@ -46,22 +46,42 @@ public class RecordModel extends Model<RecordModel> {
         return m.save();
     }
 
+    public static long getEnableRecordCount(){
+        return Db.queryLong(StrUtils.join("select count(1) from ",
+                SQLParam.T_RECORD, " where ", SQLParam.RECORD_STATUS, " = '0'"));
+    }
+    public static long getDisenableRecordCount(){
+        return Db.queryLong(StrUtils.join("select count(1) from ",
+                SQLParam.T_RECORD, " where ", SQLParam.RECORD_STATUS, " = '1'"));
+    }
+
     public static boolean updateRecord(String recordId, String recordName,
                                        String recordNum, String recordLevel,
-                                       String recordContent, String recordImgUrl){
+                                       String recordContent, String recordImgUrl,
+                                       String recordStatus){
         RecordModel m = getRecordById(recordId);
         if (m == null){
             return false;
         }
-        m.set(SQLParam.RECORD_ID, UUIDUtils.getUUID());
-        m.set(SQLParam.RECORD_NAME, recordName);
-        m.set(SQLParam.RECORD_NUM, recordNum);
-        m.set(SQLParam.RECORD_LEVEL, recordLevel);
+        if (!StrUtils.isEmpty(recordName)) {
+            m.set(SQLParam.RECORD_NAME, recordName);
+        }
+        if (!StrUtils.isEmpty(recordNum)) {
+            m.set(SQLParam.RECORD_NUM, recordNum);
+        }
+        if (!StrUtils.isEmpty(recordLevel)) {
+            m.set(SQLParam.RECORD_LEVEL, recordLevel);
+        }
         if (!StrUtils.isEmpty(recordContent)){
             m.set(SQLParam.RECORD_CONTENT, recordContent);
         }
         if (!StrUtils.isEmpty(recordImgUrl)){
             m.set(SQLParam.RECORD_IMG_URL, recordImgUrl);
+        }
+        if (SQLParam.STATUS_ENABLE.equals(recordStatus)){
+            m.set(SQLParam.RECORD_STATUS, recordStatus);
+        }else {
+            m.set(SQLParam.RECORD_STATUS, SQLParam.STATUS_DISABLE);
         }
         return m.update();
     }
@@ -109,8 +129,8 @@ public class RecordModel extends Model<RecordModel> {
         }
     }
 
-    public static Page<RecordModel> getRecordsByUserId(int pageNumber,
-                                                       int pageSize, String userId) {
+    public static Page<RecordModel> getRecordsByUserId(int pageNumber, int pageSize, String userId,
+                                                       String recordStatus) {
         if (pageNumber < 1) {
             pageNumber = 1;
         }
@@ -118,24 +138,36 @@ public class RecordModel extends Model<RecordModel> {
             pageSize = 10;
         }
         if (StrUtils.isEmpty(userId)) {
-            //未查询创建者
 //            return dao.paginate(pageNumber, pageSize, "select * ",
 //                    StrUtils.join(" from ", SQLParam.T_RECORD));
-            return dao.paginate(pageNumber, pageSize, StrUtils.join("select ", SQLParam.T_USER, ".", SQLParam.USER_NAME, ", ", SQLParam.T_RECORD, ".* "),
-                    StrUtils.join(" from ", SQLParam.T_RECORD, " left join ", SQLParam.T_USER, " on ",
-                            SQLParam.T_USER, ".", SQLParam.USER_ID, " = ", SQLParam.T_RECORD, ".", SQLParam.RECORD_CREATE_USER_ID
-                            ));
+            if (SQLParam.STATUS_ENABLE.equals(recordStatus) || SQLParam.STATUS_DISABLE.equals(recordStatus)){
+                return dao.paginate(pageNumber, pageSize, StrUtils.join("select ", SQLParam.T_USER, ".", SQLParam.USER_NAME, ", ", SQLParam.T_RECORD, ".* "),
+                        StrUtils.join(" from ", SQLParam.T_RECORD, " left join ", SQLParam.T_USER, " on ",
+                                SQLParam.T_USER, ".", SQLParam.USER_ID, " = ", SQLParam.T_RECORD, ".", SQLParam.RECORD_CREATE_USER_ID,
+                                " where ", SQLParam.T_RECORD, ".", SQLParam.RECORD_STATUS, " = ", recordStatus, " order by ", SQLParam.T_RECORD, ".", SQLParam.UPDATE_TIME, " desc"));
+            }else {
+                return dao.paginate(pageNumber, pageSize, StrUtils.join("select ", SQLParam.T_USER, ".", SQLParam.USER_NAME, ", ", SQLParam.T_RECORD, ".* "),
+                        StrUtils.join(" from ", SQLParam.T_RECORD, " left join ", SQLParam.T_USER, " on ",
+                                SQLParam.T_USER, ".", SQLParam.USER_ID, " = ", SQLParam.T_RECORD, ".", SQLParam.RECORD_CREATE_USER_ID,
+                                " order by ", SQLParam.T_RECORD, ".", SQLParam.UPDATE_TIME, " desc"
+                        ));
+            }
         } else {
-//            return dao.paginate(pageNumber, pageSize, "select * ",
-//                    StrUtils.join(" from ", SQLParam.T_RECORD,
-//                            " where ", SQLParam.RECORD_CREATE_USER_ID, " = '",
-//                            userId, "'"));
-
-            return dao.paginate(pageNumber, pageSize, StrUtils.join("select ", SQLParam.T_USER, ".", SQLParam.USER_NAME, ", ", SQLParam.T_RECORD, ".* "),
-                    StrUtils.join(" from ", SQLParam.T_RECORD, " left join ", SQLParam.T_USER, " on ",
-                            SQLParam.T_USER, ".", SQLParam.USER_ID, " = ", SQLParam.T_RECORD, ".", SQLParam.RECORD_CREATE_USER_ID,
-                            " where ", SQLParam.RECORD_CREATE_USER_ID, " = '", userId, "'"
-                    ));
+            if (SQLParam.STATUS_ENABLE.equals(recordStatus) || SQLParam.STATUS_DISABLE.equals(recordStatus)){
+                return dao.paginate(pageNumber, pageSize, StrUtils.join("select ", SQLParam.T_USER, ".", SQLParam.USER_NAME, ", ", SQLParam.T_RECORD, ".* "),
+                        StrUtils.join(" from ", SQLParam.T_RECORD, " left join ", SQLParam.T_USER, " on ",
+                                SQLParam.T_USER, ".", SQLParam.USER_ID, " = ", SQLParam.T_RECORD, ".", SQLParam.RECORD_CREATE_USER_ID,
+                                " where ", SQLParam.T_RECORD, ".", SQLParam.RECORD_CREATE_USER_ID, " = '", userId, "' and ",
+                                SQLParam.T_RECORD, ".", SQLParam.RECORD_STATUS, " = ", recordStatus, " order by ", SQLParam.T_RECORD, ".", SQLParam.UPDATE_TIME, " desc"
+                        ));
+            }else {
+                return dao.paginate(pageNumber, pageSize, StrUtils.join("select ", SQLParam.T_USER, ".", SQLParam.USER_NAME, ", ", SQLParam.T_RECORD, ".* "),
+                        StrUtils.join(" from ", SQLParam.T_RECORD, " left join ", SQLParam.T_USER, " on ",
+                                SQLParam.T_USER, ".", SQLParam.USER_ID, " = ", SQLParam.T_RECORD, ".", SQLParam.RECORD_CREATE_USER_ID,
+                                " where ", SQLParam.T_RECORD, ".", SQLParam.RECORD_CREATE_USER_ID, " = '", userId, "'",
+                                " order by ", SQLParam.T_RECORD, ".", SQLParam.UPDATE_TIME, " desc"
+                        ));
+            }
         }
     }
 

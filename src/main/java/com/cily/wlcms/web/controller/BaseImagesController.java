@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,6 +55,9 @@ public class BaseImagesController extends BaseController {
             if(item.isFormField()){
             	//获取用户具体输入的字符串 ，名字起得挺好，因为表单提交过来的是 字符串类型的  
                 String value = item.getString("UTF-8") ;
+//                if (SQLParam.RECORD_CONTENT.equals(name)){
+//                    value = URLDecoder.decode(value, "UTF-8");
+//                }
                   
                 request.setAttribute(name, value);
                 

@@ -3,6 +3,7 @@ package com.cily.wlcms.web.model;
 import com.cily.wlcms.web.conf.SQLParam;
 import com.cily.utils.base.StrUtils;
 import com.cily.utils.base.UUIDUtils;
+import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
 
@@ -15,7 +16,7 @@ import java.util.Map;
  * Created by admin on 2018/1/30.
  */
 public class UserModel extends Model<UserModel> {
-    private static UserModel dao = new UserModel().dao();
+    private static UserModel dao = new UserModel();
 
     public static boolean insert(String userName, String pwd,
                                  String realName, String sex,
@@ -46,6 +47,15 @@ public class UserModel extends Model<UserModel> {
         return um.save();
     }
 
+    public static long getEnableUserCount(){
+        return Db.queryLong(StrUtils.join("select count(1) from ",
+                SQLParam.T_USER, " where ", SQLParam.STATUS, " = '0'"));
+    }
+    public static long getDisableUserCount(){
+        return Db.queryLong(StrUtils.join("select count(1) from ",
+                SQLParam.T_USER, " where ", SQLParam.STATUS, " = '1'"));
+    }
+
     public static UserModel getUserByUserName(String userName){
         return dao.findFirst(StrUtils.join(
                 "select * from ", SQLParam.T_USER,
@@ -54,7 +64,7 @@ public class UserModel extends Model<UserModel> {
     }
 
     public static UserModel getUserByUserId(String userId){
-        return dao.findById(SQLParam.USER_ID);
+        return dao.findById(userId);
     }
 
     public final static int USER_INFO_UPDATE_SUCCESS = 0;

@@ -18,5 +18,5 @@ function href(url){
 
 function pHref(url){
 	history.replaceState("", "", window.parent.href = url);
-//	window.parent.href = url;
+//	window.location.href = url;
 }

@@ -62,7 +62,7 @@ public class UserController extends BaseController {
     @Before({UserIdInterceptor.class, PwdInterceptor.class,
             PhoneInterceptor.class, IdCardInterceptor.class})
     public void updateUserInfo(){
-        UserUtils.updateUserInfo(this, getUserId(), null);
+        UserUtils.updateUserInfo(this, null, getUserId(), null);
     }
 
     @Before({SearchInterceptor.class})

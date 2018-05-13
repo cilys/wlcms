@@ -48,7 +48,7 @@ public class UserUtils {
         }
     }
 
-    public static void updateUserInfo(BaseController c, String userId, String status){
+    public static void updateUserInfo(BaseController c, String rootUserId , String userId, String status){
         if(c == null){
             throw new NullPointerException("The Controller is null.");
         }
@@ -63,7 +63,7 @@ public class UserUtils {
         String idCard = c.getPara(SQLParam.ID_CARD, null);
 
         if (StrUtils.isEmpty(userId)){
-            c.renderJson(ResUtils.res(Param.C_USER_ID_NULL, TokenUtils.createToken(userId, deviceImei, token), null));
+            c.renderJson(ResUtils.res(Param.C_USER_ID_NULL, TokenUtils.createToken(rootUserId, deviceImei, token), null));
             return;
         }
 
@@ -71,16 +71,16 @@ public class UserUtils {
                 sex, phone, address, idCard, status);
         if (updateResult == UserModel.USER_INFO_UPDATE_SUCCESS){
             c.renderJson(ResUtils.success(TokenUtils.createToken(
-                    userId, deviceImei, token), null));
+                    rootUserId, deviceImei, token), null));
         }else if (updateResult == UserModel.USER_NOT_EXIST){
             c.renderJson(ResUtils.res(Param.C_USER_NOT_EXIST,
-                    TokenUtils.createToken(userId, deviceImei, token), null));
+                    TokenUtils.createToken(rootUserId, deviceImei, token), null));
         }else if (updateResult == UserModel.USER_INFO_NO_UPDATE){
             c.renderJson(ResUtils.res(Param.C_USER_INFO_NO_UPDATE,
-                    TokenUtils.createToken(userId, deviceImei, token), null));
+                    TokenUtils.createToken(rootUserId, deviceImei, token), null));
         }else {
             c.renderJson(ResUtils.res(Param.C_USER_INFO_UPDATE_FAILURE,
-                    TokenUtils.createToken(userId, deviceImei, token), null));
+                    TokenUtils.createToken(rootUserId, deviceImei, token), null));
         }
     }
 }

@@ -2,11 +2,12 @@ $(document).ready(function(){
 	if(unlogin()){}
 	
 	var startAllAppoint = 0;	//开始页数
-	var pageSize = 10;	//每页显示数据条数
+	var pageSize = 5;	//每页显示数据条数
 	var currentPage = 1;	//当前页数
 	var totalPage = 0;			//数据总条数
+	var userStatus = "";	//用户状态，0可用，1禁用，""全部用户
 	
-	getUsers("");
+	getUsers(userStatus);
 	
 	function getUsers(status){
 		post(getHost() + "sysUser/getUsers", 
@@ -27,12 +28,13 @@ $(document).ready(function(){
 	
 	function setDataToView(data){
 		var s = "<tr>" + 
-					"<th>用户名</th>" + 
-					"<th>真实姓名</th>" + 
-					"<th>性别</th>" + 
-					"<th>手机号码</th>" + 
-					"<th>状态</th>" + 
-					"<th>注册时间</th>" + 
+					"<th style='width:150px'>用户名</th>" + 
+					"<th style='width:120px'>真实姓名</th>" + 
+					"<th style='width:36px'>性别</th>" + 
+					"<th style='width:90px'>手机号码</th>" + 
+					"<th style='width:150px'>身份证号</th>" + 
+					"<th style='width:30px'>状态</th>" + 
+					"<th style='width:130px'>注册时间</th>" + 
 					"<th>操作</th>" + 
 				"</tr>";
 				
@@ -43,11 +45,23 @@ $(document).ready(function(){
 			s+='<td>' + strFomcat(o.realName) + '</td>';
 			s+='<td>' + fomcatSex(o.sex) + '</td>';
 			s+='<td>' + strFomcat(o.phone) + '</td>';
-			s+='<td>' + fomcatEnable(o.status) + '</td>';
+			s+='<td>' + strFomcat(o.idCard) + '</td>';
+			if(strFomcat(o.status) == '0'){
+				s+="<td><button id='btn_status_edit' data-real-name=" + o.realName + " data-user-status=" + o.status + " data-user-id=" + o.userId + " class='layui-btn layui-btn-primary layui-btn-sm'>" +
+							"<i class='layui-icon'>&#xe605;</i>" +
+						"</button>" +
+						"</td>";
+			}else{
+				s+="<td><button id='btn_status_edit' data-real-name=" + o.realName + " data-user-status=" + o.status + " data-user-id=" + o.userId + " class='layui-btn layui-btn-primary layui-btn-sm'>" +
+							"<i class='layui-icon'>&#x1006;</i>" +
+						"</button>" +
+						"</td>";
+			}
+			
 			s+='<td>' + strFomcat(o.createTime) + '</td>';
 			s+="<td><div class='layui-btn-group'>" +
-						"<button id='btn_user_edit' data-user-id=" + o.userId + " class='layui-btn layui-btn-primary layui-btn-sm'>" +
-							"<i class='layui-icon'>&#xe642;</i>" +
+						"<button id='btn_user_edit' data-real-name=" + o.realName + " data-user-id=" + o.userId + " class='layui-btn layui-btn-primary layui-btn-sm'>" +
+							"<i class='layui-icon'>&#x1002;</i>" +
 						"</button>" +
 						"<button class='layui-btn layui-btn-primary layui-btn-sm' id='btn_user_del' data-user-id=" + o.userId + ">" +
 							"<i class='layui-icon'>&#xe640;</i>" + "</button></div></td></tr>";
@@ -57,12 +71,19 @@ $(document).ready(function(){
 			$("#t_customerInfo").html(s);
 			
 			$("#t_customerInfo #btn_user_edit").on("click", function(){
+				var realName = $(this).attr("data-real-name");
 				var userId = $(this).attr("data-user-id");
-				new Toast({message: "编辑：" + userId}).show();		
+				resetPwdDialog(realName, userId);		
 			});
 			$("#t_customerInfo #btn_user_del").on("click", function(){
 				var userId = $(this).attr("data-user-id");
 				delUser(userId);	
+			});
+			$("#t_customerInfo #btn_status_edit").on("click", function(){
+				var status = $(this).attr("data-user-status");
+				var realName = $(this).attr("data-real-name");
+				var userId = $(this).attr("data-user-id");
+				enableUserDialog(status == "1" ? "0" : "1", realName, userId);
 			});
 			
 		}else{
@@ -91,7 +112,7 @@ $(document).ready(function(){
 			    	startAllAppoint = (obj.curr-1)*pageSize;
 			      //document.getElementById('biuuu_city_list').innerHTML = render(obj, obj.curr);
 				    if(!first){ //一定要加此判断，否则初始时会无限刷新
-				      	getUsers("");//一定要把翻页的ajax请求放到这里，不然会请求两次。
+				      	getUsers(userStatus);//一定要把翻页的ajax请求放到这里，不然会请求两次。
 				          //location.href = '?page='+obj.curr;
 				    }
 			   	}
@@ -106,7 +127,7 @@ $(document).ready(function(){
    		$("#selectValue").val("");
    		if(searchValue.length > 0){
 	   		currentPage = 1;
-	   		getUsers("");
+	   		getUsers(userStatus);
    		}
    	});
    	
@@ -151,7 +172,7 @@ $(document).ready(function(){
 							idCard: $("#idCard_id").val(),
 							address: $("#address_id").val(),
 							status: $("#status_id").prop('checked') ? 0 : 1,
-							sex: $('input:radio[name="sex"]:checked').val() == '男' ? 0 : 1
+							sex: $('input:radio[name="sex"]:checked').val() == '男' ? 1 : 2
 						}, function success(res){
 							new Toast({message: res.msg}).show();
 							
@@ -182,7 +203,7 @@ $(document).ready(function(){
 		function success(res){
 			new Toast({message: res.msg}).show();
 			if(res.code == '0'){
-				getUsers();
+				getUsers(userStatus);
 			}
 		}, function error(err){
 			new Toast({message: '删除用户失败，请重试...'}).show();
@@ -222,37 +243,98 @@ $(document).ready(function(){
    		$("#selectValue").val("");
    		
 	   		currentPage = 1;
-	   		getUsers("");
+	   		getUsers(userStatus);
    		
    	});
 	
-//	layui.use(['layer', 'form'], function() {
-//		var layer = layui.layer,
-//			
-//		form = layui.form();
-//			
-//		form.on('submit(search)',function(data){
-//			currentPage = 1;
-//			post(getHost() + "user/search", 
-//			{
-//				pageNumber:currentPage, 
-//				pageSize:pageSize,
-//				searchText: $("#selectValue").val()
-//			},function success(res){
-//				new Toast({message: res.msg}).show();
-//				
-//				if(res.code == '0'){
-//					setDataToView(res.data.list);
-//					totalPage = res.data.totalPage;
-//					currentPage = res.data.pageNumber;
-//					toPage();
-//				}
-//			}, function error(err){
-//				new Toast({message: "查询用户失败..."}).show();
-//				logErr("查询用户失败..." + err);
-//			});
-//			
-//			return false;
-//		});
-//	});
+	function resetPwdDialog(realName, userId){
+		layui.use("layer", function(){
+			layui.layer.open({
+				title:"重置密码",
+				type:1,
+				content:"<div style='padding: 20px 80px;'>是否重置" + realName + "密码？</div>",
+				btn:"重置密码",
+				btnAlign:"c",
+				shade:0,
+				yes:function(){
+					layui.layer.closeAll();
+					resetPwd(realName, userId);
+				}
+			});
+		});
+	}
+	
+	function resetPwd(userId){
+		post(getHost() + "sysUser/updateUserInfo", 
+			{userId: userId,
+			pwd: "123456"
+			},
+			function success(res){
+				new Toast({message: res.msg}).show();	
+			}, function error(){
+				new Toast({message: "重置密码失败，请重试..."}).show();
+		});
+	}
+	
+	function enableUserDialog(status, realName, userId){
+		layui.use("layer", function(){
+			layui.layer.open({
+				title:(status == '0' ? "启用用户" : "禁用用户"),
+				type:1,
+				offset:"t",
+				content:"<div style='padding: 20px 80px;'>是否" + (status == '0' ? "启用" : "禁用") + realName + "</div>",
+				btn:"重置",
+				btnAlign:"c",
+				shade:0,
+				yes:function(){
+					layui.layer.closeAll();
+					updateStatus(status, userId);
+				}
+			});
+		});
+	}
+	function updateStatus(status, userId){
+		post(getHost() + "sysUser/updateUserInfo", 
+			{userId: userId,
+			status: status
+			},
+			function success(res){
+				new Toast({message: res.msg}).show();
+				currentPage = 1;
+	   			getUsers(userStatus);
+			}, function error(){
+				new Toast({message: "操作失败，请重试..."}).show();
+		});
+	}
+	
+	$("#btn_user_all").click(function(){
+		$("#btn_user_all").removeClass("layui-btn-primary");
+		$("#btn_user_enable").removeClass("layui-btn-primary");
+		$("#btn_user_disable").removeClass("layui-btn-primary");
+		
+		$("#btn_user_enable").addClass("layui-btn-primary");
+		$("#btn_user_disable").addClass("layui-btn-primary");
+		userStatus = "";
+		getUsers(userStatus);
+	});
+	$("#btn_user_enable").click(function(){
+		$("#btn_user_all").removeClass("layui-btn-primary");
+		$("#btn_user_enable").removeClass("layui-btn-primary");
+		$("#btn_user_disable").removeClass("layui-btn-primary");
+		
+		$("#btn_user_all").addClass("layui-btn-primary");
+		$("#btn_user_disable").addClass("layui-btn-primary");
+		userStatus = "0";
+		getUsers(userStatus);
+	});
+	$("#btn_user_disable").click(function(){
+		$("#btn_user_all").removeClass("layui-btn-primary");
+		$("#btn_user_enable").removeClass("layui-btn-primary");
+		$("#btn_user_disable").removeClass("layui-btn-primary");
+		
+		$("#btn_user_enable").addClass("layui-btn-primary");
+		$("#btn_user_all").addClass("layui-btn-primary");
+		userStatus = "1";
+		getUsers(userStatus);
+	});
 });

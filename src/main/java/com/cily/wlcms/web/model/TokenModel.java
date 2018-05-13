@@ -14,7 +14,7 @@ public class TokenModel extends Model<TokenModel> {
     private static TokenModel dao = new TokenModel();
 
     public static boolean updateByUserId(String userId, String token){
-        TokenModel m = dao.findById(SQLParam.USER_ID);
+        TokenModel m = dao.findById(userId);
         if (m == null){
             m = new TokenModel();
             m.set(SQLParam.USER_ID, userId);
@@ -37,7 +37,7 @@ public class TokenModel extends Model<TokenModel> {
 
     public static String checkTokenByUserId(String userId,
                                             String token){
-        TokenModel m = dao.findById(SQLParam.USER_ID);
+        TokenModel m = dao.findById(userId);
 
         if (m == null){
             return Param.C_USER_NOT_LOGIN;

@@ -6,6 +6,24 @@ function strFomcat(str){
 	return strIsEmpty(str) ? "" : str;
 }
 
+function getRecordContent(str){
+	var s = strFomcat(str);
+	if(s.length > 0){
+		return decodeURI(s);
+	}
+	return s;
+}
+
+function fomcatRecordContent(str){
+	var s = getRecordContent(str);
+	log("发布内容：" + s);
+	if(s.length > 12){
+		return s = s.substring(0, 12) + "...";
+	}else{
+		return s;
+	}
+}
+
 function fomcatEnable(str){
 	if(strIsEmpty(str)){
 		return "禁用";

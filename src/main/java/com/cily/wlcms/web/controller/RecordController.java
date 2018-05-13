@@ -18,10 +18,11 @@ import java.util.Map;
  */
 @Clear({DeviceImeiInterceptor.class, LogInterceptor.class})
 public class RecordController extends BaseImagesController {
+    String fileDir = PropKit.get("images_dirs_report", "/");
 
-    @Before({RecordAddInterceptor.class})
+//    @Before({RecordAddInterceptor.class})
     public void add(){
-        String fileDir = PropKit.get("images_dirs_report", "/");
+
 //        String img0 = null, img1 = null, img2 = null,
 //                img3 = null, img4 = null, img5 = null,
 //                img6 = null, img7 = null, img8 = null;
@@ -47,9 +48,9 @@ public class RecordController extends BaseImagesController {
 //                String url = join(img0, img1, img2, img3, img4, img5, img6, img7, img8);
                 fileUrl = param.getOrDefault(SQLParam.RECORD_IMG_URL, null);
 
-                String userId = "670b14728ad9902aecba32e22fa4f6bd";
+//                String userId = "670b14728ad9902aecba32e22fa4f6bd";
 
-                if (RecordModel.insert(recordName, recordNum, recordLevel, recordContent, fileUrl, userId)){
+                if (RecordModel.insert(recordName, recordNum, recordLevel, recordContent, fileUrl, getUserId())){
                     renderJsonSuccess( null);
                     return;
                 }else {
@@ -69,11 +70,11 @@ public class RecordController extends BaseImagesController {
         }
     }
 
-    @Before({UserIdInterceptor.class})
     public void getRecordsByUserId(){
         String userId = getParam(SQLParam.USER_ID);
+        String recordStatus = getPara(SQLParam.RECORD_STATUS, null);
         renderJsonSuccess(RecordModel.getRecordsByUserId(getParaToInt(Param.PAGE_NUMBER, 1),
-                getParaToInt(Param.PAGE_SIZE, 10), userId));
+                getParaToInt(Param.PAGE_SIZE, 10), userId, recordStatus));
     }
 
     //userId不为空，查自己的。为空，则查任何人的
@@ -88,6 +89,7 @@ public class RecordController extends BaseImagesController {
     @Before({RecordIdInterceptor.class, RecordDelInterceptor.class})
     public void del() {
         String recordId = getParam(SQLParam.RECORD_ID);
+        delFile(fileDir, RecordModel.getRecordById(recordId).getStr(SQLParam.RECORD_IMG_URL));
         if (RecordModel.delById(recordId)) {
             renderJsonSuccess(null);
         } else {

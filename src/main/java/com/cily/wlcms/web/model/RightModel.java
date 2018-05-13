@@ -10,7 +10,7 @@ import com.jfinal.plugin.activerecord.Page;
  * Created by admin on 2018/2/22.
  */
 public class RightModel extends Model<RightModel> {
-    private static RightModel dao = new RightModel().dao();
+    private static RightModel dao = new RightModel();
 
     public static boolean insert(String rightName, String accessUrl,
             String status){

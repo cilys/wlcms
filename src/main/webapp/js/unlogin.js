@@ -3,7 +3,7 @@ function login(res){
 		pHref("./login.html");
 		return false;
 	}
-	var code = res.status;
+	var code = res.code;
 
 	if(code == "1002"){
 		//1002用户未登录
@@ -61,4 +61,17 @@ function saveCookie(token, userId){
 
 	window.localStorage.setItem("token", token);
 	window.localStorage.setItem("userId", userId);
+}
+
+function saveLoginInfo(userName, pwd){
+	window.localStorage.setItem("userName", userName);
+	window.localStorage.setItem("pwd", pwd);
+}
+function getUserName(){
+	var userName = window.localStorage.getItem("userName");
+	return (userName == null || userName == "") ? "" : userName;
+}
+function getPwd(){
+	var pwd = window.localStorage.getItem("pwd");
+	return (pwd == null || pwd == "") ? "" : pwd;
 }

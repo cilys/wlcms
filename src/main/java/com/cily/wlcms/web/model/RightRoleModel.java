@@ -10,7 +10,7 @@ import com.jfinal.plugin.activerecord.Page;
  * Created by admin on 2018/2/22.
  */
 public class RightRoleModel extends Model<RightRoleModel> {
-    private static RightRoleModel dao = new RightRoleModel().dao();
+    private static RightRoleModel dao = new RightRoleModel();
 
     public static boolean insert(String rightId, String roleId){
         if (StrUtils.isEmpty(rightId) || StrUtils.isEmpty(roleId)){
