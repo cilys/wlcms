@@ -1,5 +1,6 @@
 package com.cily.wlcms.web.controller;
 
+import com.cily.utils.base.StrUtils;
 import com.cily.wlcms.web.conf.Param;
 import com.cily.wlcms.web.conf.SQLParam;
 import com.cily.wlcms.web.interceptor.*;
@@ -70,5 +71,35 @@ public class UserController extends BaseController {
         String searchText = getParam(Param.SEARCH_TEXT);
         renderJsonSuccess(UserModel.searchUser(getParaToInt(Param.PAGE_NUMBER, 1),
                 getParaToInt(Param.PAGE_SIZE, 10), searchText));
+    }
+
+    @Before({PwdInterceptor.class})
+    public void changePwd(){
+        String pwd = getParam(SQLParam.PWD);
+        String newPwd = getParam("newPwd");
+        if (StrUtils.isEmpty(newPwd)){
+            renderJsonFailed(Param.C_PWD_NEW_NULL, null);
+            return;
+        }
+        if (newPwd.length() > 32){
+            renderJsonFailed(Param.C_PWD_ILLAGLE, null);
+            return;
+        }
+        String userId = getUserId();
+        UserModel um = UserModel.getUserByUserId(userId);
+        if (um == null){
+            renderJsonFailed(Param.C_USER_NOT_EXIST, null);
+            return;
+        }
+        if (!pwd.equals(um.get(SQLParam.PWD))){
+            renderJsonFailed(Param.C_PWD_NOT_EQUAL, null);
+            return;
+        }
+        if (UserModel.updateUserInfo(userId, newPwd, null, null,
+                null, null, null, null) == UserModel.USER_INFO_UPDATE_SUCCESS){
+            renderJsonSuccess(null);
+        }else {
+            renderJsonFailed(Param.C_PWD_CHANGE_FAILED, null);
+        }
     }
 }

@@ -36,6 +36,9 @@ public class Param {
 
     public final static String C_PWD_NULL = "1031";
     public final static String C_PWD_ILLAGLE = "1032";
+    public final static String C_PWD_NEW_NULL = "1033";
+    public final static String C_PWD_NOT_EQUAL = "1034";
+    public final static String C_PWD_CHANGE_FAILED = "1035";
 
     public final static String C_REAL_NAME_TOO_LONG = "1041";
 
@@ -147,9 +150,9 @@ public class Param {
         failureInfo.put(C_RECORD_ID_NULL, "物料id为空");
         failureInfo.put(C_RECORD_ID_NOT_EXIST, "物料信息不存在");
         failureInfo.put(C_NO_RIGHT_DEL_OTHER_USER_ROCORD, "无权删除其他人的发布");
-//        failureInfo.put(, );
-//        failureInfo.put(, );
-//        failureInfo.put(, );
+        failureInfo.put(C_PWD_NEW_NULL, "新密码为空");
+        failureInfo.put(C_PWD_NOT_EQUAL, "原密码错误");
+        failureInfo.put(C_PWD_CHANGE_FAILED, "修改密码失败");
 //        failureInfo.put(, );
 //        failureInfo.put(, );
 //        failureInfo.put(, );
