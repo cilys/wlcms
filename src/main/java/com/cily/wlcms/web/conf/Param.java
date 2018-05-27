@@ -92,10 +92,10 @@ public class Param {
     public final static String C_SEARCH_TEXT_NULL = "3001";
     public final static String C_SEARCH_TEXT_TOO_LONG = "3002";
 
-//    public final static String C_
-//    public final static String C_
-//    public final static String C_
-//    public final static String C_
+    public final static String C_MSG_TO_USER_ID_NULL = "4001";
+    public final static String C_MSG_TO_USER_ID_NOT_EXIST = "4002";
+    public final static String C_MSG_INSERT_FAILED = "4003";
+    public final static String C_MSG_NULL = "4004";
 //    public final static String C_
 
     private final static Map<String, String> failureInfo = new HashMap<>();
@@ -153,10 +153,10 @@ public class Param {
         failureInfo.put(C_PWD_NEW_NULL, "新密码为空");
         failureInfo.put(C_PWD_NOT_EQUAL, "原密码错误");
         failureInfo.put(C_PWD_CHANGE_FAILED, "修改密码失败");
-//        failureInfo.put(, );
-//        failureInfo.put(, );
-//        failureInfo.put(, );
-//        failureInfo.put(, );
+        failureInfo.put(C_MSG_TO_USER_ID_NULL, "对方用户id为空");
+        failureInfo.put(C_MSG_TO_USER_ID_NOT_EXIST, "对方用户不存在");
+        failureInfo.put(C_MSG_INSERT_FAILED, "插入记录失败");
+        failureInfo.put(C_MSG_NULL, "消息内容为空");
 //        failureInfo.put(, );
 //        failureInfo.put(, );
 //        failureInfo.put(, );

@@ -86,6 +86,12 @@ public class BaseImagesController extends BaseController {
                     }else {
                         lastImgUrl = "," + lastImgUrl + "," + fileName;
                     }
+
+                    while (lastImgUrl.startsWith(",")) {
+                        if (lastImgUrl.length() >= 2) {
+                            lastImgUrl = lastImgUrl.substring(1);
+                        }
+                    }
                 }
                 map_result.put(SQLParam.RECORD_IMG_URL, lastImgUrl);
 

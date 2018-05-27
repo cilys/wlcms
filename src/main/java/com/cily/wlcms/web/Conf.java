@@ -28,6 +28,7 @@ public class Conf extends JFinalConfig {
         me.add("sysUser", SysUserController.class);
         me.add("role", RoleController.class);
         me.add("record", RecordController.class);
+        me.add("msg", MsgController.class);
     }
 
     @Override
@@ -53,13 +54,14 @@ public class Conf extends JFinalConfig {
 //        arp.addMapping(SQLParam.T_USER_ROLE, SQLParam.USER_ID + "," + SQLParam.ROLE_ID, UserRoleModel.class);
         arp.addMapping(SQLParam.T_RECORD, SQLParam.RECORD_ID, RecordModel.class);
         arp.addMapping(SQLParam.T_TOKEN, SQLParam.USER_ID, TokenModel.class);
+        arp.addMapping(SQLParam.T_MSG, SQLParam.MSG_ID, MsgModel.class);
     }
 
     @Override
     public void configInterceptor(Interceptors me) {
-        me.add(new LogInterceptor());
-        me.add(new DeviceImeiInterceptor());
-        me.add(new LoginedInterceptor());
+//        me.add(new LogInterceptor());
+//        me.add(new DeviceImeiInterceptor());
+//        me.add(new LoginedInterceptor());
 //        me.add(new RightInterceptor());
     }
 

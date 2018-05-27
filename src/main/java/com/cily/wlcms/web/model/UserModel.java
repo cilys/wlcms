@@ -139,12 +139,25 @@ public class UserModel extends Model<UserModel> {
             desc = "DESC";
         }
 
+        Page<UserModel> result = null;
+
         if (SQLParam.STATUS_ENABLE.equals(status) || SQLParam.STATUS_DISABLE.equals(status)){
             String sql = StrUtils.join(" from ", SQLParam.T_USER," where ", SQLParam.STATUS, " = '", status, "' order by ", SQLParam.CREATE_TIME, " ", desc);
-            return dao.paginate(pageNumber, pageSize, "select * ", sql);
+            result = dao.paginate(pageNumber, pageSize, "select * ", sql);
         }else {
-            return dao.paginate(pageNumber, pageSize, "select * ", " from " + SQLParam.T_USER + " order by " + SQLParam.CREATE_TIME + " " + desc);
+            result = dao.paginate(pageNumber, pageSize, "select * ", " from " + SQLParam.T_USER + " order by " + SQLParam.CREATE_TIME + " " + desc);
         }
+        if (result != null){
+            if (result.getList() != null && result.getList().size() > 0){
+                for (UserModel um : result.getList()){
+                    um.remove(SQLParam.PWD);
+                    um.set(SQLParam.PHONE, formcatPhone(um.get(SQLParam.PHONE, null)));
+                    um.set(SQLParam.ID_CARD, formcatIdCard(um.get(SQLParam.ID_CARD, null)));
+                    um.set(SQLParam.ADDRESS, formcatAddress(um.get(SQLParam.ADDRESS, null)));
+                }
+            }
+        }
+        return result;
     }
 
     public static boolean delByUserId(String userId){
@@ -164,6 +177,72 @@ public class UserModel extends Model<UserModel> {
                 SQLParam.USER_NAME, " like '%", searchText, "%' or ",
                 SQLParam.REAL_NAME, " like '%", searchText, "%' order by ", SQLParam.CREATE_TIME, " DESC");
 
-        return dao.paginate(pageNumber, pageSize, "select * ", sql);
+        Page<UserModel> result = dao.paginate(pageNumber, pageSize, "select * ", sql);
+        if (result != null){
+            if (result.getList() != null && result.getList().size() > 0){
+                for (UserModel um : result.getList()){
+                    um.remove(SQLParam.PWD);
+                    um.set(SQLParam.PHONE, formcatPhone(um.get(SQLParam.PHONE, null)));
+                    um.set(SQLParam.ID_CARD, formcatIdCard(um.get(SQLParam.ID_CARD, null)));
+                    um.set(SQLParam.ADDRESS, formcatAddress(um.get(SQLParam.ADDRESS, null)));
+                }
+            }
+        }
+        return result;
+    }
+
+    public static String formcatPhone(String phone){
+        if (!StrUtils.isEmpty(phone)){
+            char[] strs = phone.toCharArray();
+            for (int i = 0; i < strs.length; i++){
+                if (i > 2 && i < phone.length() - 4){
+                    strs[i] = '*';
+                }
+            }
+            return String.valueOf(strs);
+        }
+        return "";
+    }
+    public static String formcatIdCard(String idCard){
+        if (!StrUtils.isEmpty(idCard)){
+            char[] strs = idCard.toCharArray();
+            for (int i = 0; i < strs.length; i++){
+                if (i > 1){
+                    strs[i] = '*';
+                }
+            }
+            return String.valueOf(strs);
+        }
+        return "";
+    }
+
+    public static String formcatAddress(String address){
+        if (!StrUtils.isEmpty(address)){
+            if (address.length() > 2){
+                address = address.substring(2);
+                return address;
+            }
+        }
+        return "";
+    }
+
+    public static List<UserModel> searchUsers(List<String> userIds){
+        if (userIds == null || userIds.size() < 1){
+            return null;
+        }
+        StringBuilder su = StrUtils.getStringBuilder();
+        for (String s : userIds){
+            su.append("or ");
+            su.append(SQLParam.USER_ID);
+            su.append(" = '");
+            su.append(s);
+            su.append("' ");
+        }
+        String str = su.toString();
+        if (str.startsWith("or")){
+            str = str.substring(2);
+        }
+
+        return dao.find(StrUtils.join("select * from ", SQLParam.T_USER, " where ", str));
     }
 }

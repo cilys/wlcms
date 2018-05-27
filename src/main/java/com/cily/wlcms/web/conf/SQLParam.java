@@ -13,6 +13,8 @@ public interface SQLParam {
     String T_USER_PROJECT = "t_user_project";
     String T_RECORD = "t_record";
     String T_TOKEN = "t_token";
+    String T_COMMENT = "t_comment";
+    String T_MSG = "t_msg";
 
 
     String USER_ID = "userId";
@@ -64,4 +66,15 @@ public interface SQLParam {
     String RECORD_IMG_URL_6 = "recordImgUrl6";
     String RECORD_IMG_URL_7 = "recordImgUrl7";
     String RECORD_IMG_URL_8 = "recordImgUrl8";
+
+    String COMMENT_ID = "commentId";
+    String COMMENT_P_ID = "pCommentId";
+    String COMMENT = "comment";
+    String COMMENT_CREATE_USER_ID = "commentCreateUserId";
+    String COMMENT_STATUS = "commentStatus";
+
+    String MSG_ID = "msgId";
+    String FROM_USER_ID = "fromUserId";
+    String TO_USER_ID = "toUserId";
+    String MSG = "msg";
 }

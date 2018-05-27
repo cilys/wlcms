@@ -38,7 +38,7 @@ function fomcatEnable(str){
 
 function fomcatSex(str){
 	if(strIsEmpty(str)){
-		return "未知";
+		return "保密";
 	}
 	if(str == "0"){
 		return "未知";
@@ -49,5 +49,5 @@ function fomcatSex(str){
 	if(str == "2"){
 		return "女";
 	}
-	return "未知";
+	return "保密";
 }

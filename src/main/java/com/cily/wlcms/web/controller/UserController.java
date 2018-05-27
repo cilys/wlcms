@@ -1,5 +1,6 @@
 package com.cily.wlcms.web.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.cily.utils.base.StrUtils;
 import com.cily.wlcms.web.conf.Param;
 import com.cily.wlcms.web.conf.SQLParam;
@@ -11,6 +12,8 @@ import com.cily.wlcms.web.utils.ResUtils;
 import com.cily.wlcms.web.utils.TokenUtils;
 import com.jfinal.aop.Before;
 import com.jfinal.aop.Clear;
+
+import java.util.List;
 
 /**
  * Created by admin on 2018/1/30.
@@ -73,6 +76,17 @@ public class UserController extends BaseController {
                 getParaToInt(Param.PAGE_SIZE, 10), searchText));
     }
 
+    @Before({UserIdInterceptor.class})
+    public void userInfo(){
+        String userId = getParam(SQLParam.USER_ID);
+        UserModel um = UserModel.getUserByUserId(userId);
+        um.remove(SQLParam.PWD);
+        um.set(SQLParam.PHONE, UserModel.formcatPhone(um.get(SQLParam.PHONE, null)));
+        um.set(SQLParam.ID_CARD, UserModel.formcatIdCard(um.get(SQLParam.ID_CARD, null)));
+        um.set(SQLParam.ADDRESS, UserModel.formcatAddress(um.get(SQLParam.ADDRESS, null)));
+        renderJsonSuccess(um);
+    }
+
     @Before({PwdInterceptor.class})
     public void changePwd(){
         String pwd = getParam(SQLParam.PWD);
@@ -101,5 +115,15 @@ public class UserController extends BaseController {
         }else {
             renderJsonFailed(Param.C_PWD_CHANGE_FAILED, null);
         }
+    }
+
+    public void searchUsers(){
+        String userIds = getParam("userIds");
+        if (StrUtils.isEmpty(userIds)){
+            renderJsonFailed(Param.C_USER_ID_NULL, null);
+            return;
+        }
+        List<String> us = JSON.parseArray(userIds, String.class);
+        renderJsonSuccess(UserModel.searchUsers(us));
     }
 }
