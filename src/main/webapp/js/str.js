@@ -6,11 +6,27 @@ function strFomcat(str){
 	return strIsEmpty(str) ? "" : str;
 }
 
+function strFomcatUserName(realName, userName){
+	var r = strFomcat(realName);
+	
+	return strIsEmpty(r) ? userName : r;
+}
+
+function fomcatMsg(str){
+	var s = getRecordContent(str);
+	log("发布内容：" + s);
+	if(s.length > 30){
+		return s = s.substring(0, 30) + "...";
+	}else{
+		return s;
+	}
+}
+
 function getRecordContent(str){
 	var s = strFomcat(str);
-	if(s.length > 0){
-		return decodeURI(s);
-	}
+	// if(s.length > 0){
+	// 	return decodeURI(s);
+	// }
 	return s;
 }
 

@@ -2,6 +2,11 @@ function log(str){
 	console.log(str);
 }
 
+function logE(err){
+    //此函数不会被关闭，会打印出来
+    console.log(err);
+}
+
 function logErr(err){
 	//此函数不会被关闭，会打印出来
 	console.log(err);

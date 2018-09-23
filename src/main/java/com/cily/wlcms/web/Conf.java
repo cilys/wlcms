@@ -55,6 +55,8 @@ public class Conf extends JFinalConfig {
         arp.addMapping(SQLParam.T_RECORD, SQLParam.RECORD_ID, RecordModel.class);
         arp.addMapping(SQLParam.T_TOKEN, SQLParam.USER_ID, TokenModel.class);
         arp.addMapping(SQLParam.T_MSG, SQLParam.MSG_ID, MsgModel.class);
+        arp.addMapping(SQLParam.T_FRIEND,
+                SQLParam.USER_ID_1 + "," + SQLParam.USER_ID_2, FriendModel.class);
     }
 
     @Override

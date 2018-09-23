@@ -24,6 +24,7 @@
 		<script type="text/javascript" src="js/jquery.cookie.js" ></script>
 		<script type="text/javascript" src="js/log.js" ></script>
 		<script type="text/javascript" src="js/toast.js" ></script>
+		<script type="text/javascript" src="js/conf.js" ></script>
 
 	</head>
 
@@ -50,6 +51,9 @@
 								<span></span>
 							</a>
 							<dl class="layui-nav-child">
+								<dd>
+									<a id="a_change_pwd"><i class="fa fa-sign-out" aria-hidden="true"></i> 修改密码</a>
+								</dd>
 								<dd>
 									<a id="a_logout"><i class="fa fa-sign-out" aria-hidden="true"></i> 注销</a>
 								</dd>
@@ -114,6 +118,27 @@
 					clearCookie();
 					history.replaceState("", "", location.href = "login.html");
 				});
+				$("#a_change_pwd").click(function(){
+					layer.prompt({title: "是否重置密码？重置后需重新登录：", formType: 1, maxlength:32}, function(pass, index){
+					    layer.close(index);
+					    resetPwd(window.localStorage.getItem("userId"), pass);
+					});
+				});
+				function resetPwd(userId, pwd){
+					post(getHost() + "sysUser/updateUserInfo", 
+						{userId: userId,
+						pwd: pwd
+						},
+						function success(res){
+							new Toast({message: res.msg}).show();
+							if(res.code == 0){
+								clearCookie();
+								history.replaceState("", "", location.href = "login.html");
+							}
+						}, function error(){
+							new Toast({message: "重置密码失败，请重试..."}).show();
+					});
+				}
 			
 				layui.use('layer', function() {
 					var $ = layui.jquery,

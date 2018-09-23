@@ -35,6 +35,7 @@
                             <p id="p_record_count">7、发布总数：</p>
                             <p id="p_record_enable">8、可用发布：</p>
                             <p id="p_record_disable">9、禁用发布：</p>
+							<p id="p_msg_count">10、私信总数：</p>
                         </div>
                     </fieldset>
 				</div>
@@ -43,15 +44,16 @@
 	</body>
 
 	<script type="text/javascript">
-		getUserCount();
-		log("getUserCount");
-		getRecordCount();
-		log("getRecordCount");
-		
 		if(unlogin()){
 			
 		}
-		
+
+        getUserCount();
+        log("getUserCount");
+        getRecordCount();
+        log("getRecordCount");
+        getMsgCount();
+
 		function getUserCount(){
 			post(getHost() + "sysUser/getUserCount", null, function success(res){
 				
@@ -86,6 +88,18 @@
 				logErr("获取发布数量失败：" + err);
 			});
 		}
+
+		function getMsgCount() {
+            post(getHost() + "sysUser/getMsgCount", null, function success(res){
+                var msgTotalCounts = res.data.msgTotalCounts;
+                log("getMsgCount msgTotalCounts = " + msgTotalCounts);
+
+                $("#p_msg_count").text("10、私信总数：：" + msgTotalCounts);
+            }, function error(err){
+                log("获取私信数量失败");
+                logErr("获取私信数量失败：" + err);
+            });
+        }
 	</script>
 
 </html>

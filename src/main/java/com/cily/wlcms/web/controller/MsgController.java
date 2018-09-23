@@ -5,6 +5,8 @@ import com.cily.wlcms.web.conf.Param;
 import com.cily.wlcms.web.conf.SQLParam;
 import com.cily.wlcms.web.model.MsgModel;
 import com.cily.wlcms.web.model.UserModel;
+import com.cily.wlcms.web.utils.RootUserIdUtils;
+import com.jfinal.kit.PropKit;
 import com.jfinal.plugin.activerecord.Page;
 
 import java.util.*;
@@ -18,6 +20,12 @@ public class MsgController extends BaseController {
         String fromUserId = getUserId();
         String toUserId = getParam(SQLParam.TO_USER_ID);
         String msg = getParam(SQLParam.MSG);
+        String msgType = getPara(SQLParam.MSG_TYPE);
+        if (StrUtils.isEmpty(msgType)){
+            if (RootUserIdUtils.isRootUser(fromUserId)){
+                msgType = "0";
+            }
+        }
         if (StrUtils.isEmpty(toUserId)){
             renderJsonFailed(Param.C_MSG_TO_USER_ID_NULL, null);
             return;
@@ -32,7 +40,7 @@ public class MsgController extends BaseController {
             renderJsonFailed(Param.C_MSG_TO_USER_ID_NOT_EXIST, null);
             return;
         }
-        MsgModel m = MsgModel.createModel(fromUserId, toUserId, msg);
+        MsgModel m = MsgModel.createModel(fromUserId, toUserId, msg, msgType);
         if (m == null){
             renderJsonFailed(Param.C_MSG_NULL, null);
             return;

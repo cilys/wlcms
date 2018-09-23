@@ -85,6 +85,9 @@ public class Param {
     public final static String C_RECORD_ADD_FAILED = "2104";
     public final static String C_RECORD_LEVEL_NULL = "2105";
     public final static String C_RECORD_DEL_FAILED = "2106";
+    public final static String C_RECORD_CONTENT_UPDATE_FAILED = "2107";
+    public final static String C_RECORD_STATUS_UPDATE_FAILED = "2108";
+
     public final static String C_RECORD_ID_NULL = "2111";
     public final static String C_RECORD_ID_NOT_EXIST = "2112";
     public final static String C_NO_RIGHT_DEL_OTHER_USER_ROCORD = "2121";
@@ -96,7 +99,7 @@ public class Param {
     public final static String C_MSG_TO_USER_ID_NOT_EXIST = "4002";
     public final static String C_MSG_INSERT_FAILED = "4003";
     public final static String C_MSG_NULL = "4004";
-//    public final static String C_
+    public final static String C_MSG_DEL_FAILED = "401";
 
     private final static Map<String, String> failureInfo = new HashMap<>();
 
@@ -157,9 +160,9 @@ public class Param {
         failureInfo.put(C_MSG_TO_USER_ID_NOT_EXIST, "对方用户不存在");
         failureInfo.put(C_MSG_INSERT_FAILED, "插入记录失败");
         failureInfo.put(C_MSG_NULL, "消息内容为空");
-//        failureInfo.put(, );
-//        failureInfo.put(, );
-//        failureInfo.put(, );
+        failureInfo.put(C_MSG_DEL_FAILED, "消息失败");
+        failureInfo.put(C_RECORD_CONTENT_UPDATE_FAILED, "更新发布内容失败");
+        failureInfo.put(C_RECORD_STATUS_UPDATE_FAILED, "更新发布状态失败");
 //        failureInfo.put(, );
 //        failureInfo.put(, );
 //        failureInfo.put(, );

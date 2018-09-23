@@ -1,5 +1,6 @@
 package com.cily.wlcms.web.model;
 
+import com.cily.utils.base.time.TimeUtils;
 import com.cily.wlcms.web.conf.SQLParam;
 import com.cily.utils.base.StrUtils;
 import com.cily.utils.base.UUIDUtils;
@@ -102,6 +103,7 @@ public class UserModel extends Model<UserModel> {
                 um.set(SQLParam.STATUS, status);
             }
         }
+        um.set(SQLParam.CREATE_TIME, TimeUtils.milToStr(System.currentTimeMillis(), null));
         if (isEmpty(pwd, realName, sex, phone, address, status)){
             return USER_INFO_NO_UPDATE;
         }
@@ -127,7 +129,8 @@ public class UserModel extends Model<UserModel> {
         return true;
     }
 
-    public static Page<UserModel> getUsersByStatus(String status, int pageNumber, int pageSize, String desc){
+    public static Page<UserModel> getUsersByStatus(String status, int pageNumber,
+                                                   int pageSize, String desc, boolean encoder){
         if (pageSize < 1){
             pageSize = 10;
         }
@@ -149,11 +152,14 @@ public class UserModel extends Model<UserModel> {
         }
         if (result != null){
             if (result.getList() != null && result.getList().size() > 0){
-                for (UserModel um : result.getList()){
+                for (UserModel um : result.getList()) {
                     um.remove(SQLParam.PWD);
-                    um.set(SQLParam.PHONE, formcatPhone(um.get(SQLParam.PHONE, null)));
-                    um.set(SQLParam.ID_CARD, formcatIdCard(um.get(SQLParam.ID_CARD, null)));
-                    um.set(SQLParam.ADDRESS, formcatAddress(um.get(SQLParam.ADDRESS, null)));
+                    if (encoder) {
+                        um.set(SQLParam.REAL_NAME, formcatRealName(um.get(SQLParam.REAL_NAME, null)));
+                        um.set(SQLParam.PHONE, formcatPhone(um.get(SQLParam.PHONE, null)));
+                        um.set(SQLParam.ID_CARD, formcatIdCard(um.get(SQLParam.ID_CARD, null)));
+                        um.set(SQLParam.ADDRESS, formcatAddress(um.get(SQLParam.ADDRESS, null)));
+                    }
                 }
             }
         }
@@ -164,7 +170,8 @@ public class UserModel extends Model<UserModel> {
         return dao.deleteById(userId);
     }
 
-    public static  Page<UserModel> searchUser(int pageNumber, int pageSize, String searchText){
+    public static  Page<UserModel> searchUser(int pageNumber, int pageSize,
+                                              String searchText, boolean encoder){
         if (pageSize < 1){
             pageSize = 10;
         }
@@ -180,11 +187,14 @@ public class UserModel extends Model<UserModel> {
         Page<UserModel> result = dao.paginate(pageNumber, pageSize, "select * ", sql);
         if (result != null){
             if (result.getList() != null && result.getList().size() > 0){
-                for (UserModel um : result.getList()){
+                for (UserModel um : result.getList()) {
                     um.remove(SQLParam.PWD);
-                    um.set(SQLParam.PHONE, formcatPhone(um.get(SQLParam.PHONE, null)));
-                    um.set(SQLParam.ID_CARD, formcatIdCard(um.get(SQLParam.ID_CARD, null)));
-                    um.set(SQLParam.ADDRESS, formcatAddress(um.get(SQLParam.ADDRESS, null)));
+                    if (encoder) {
+                        um.set(SQLParam.PHONE, formcatPhone(um.get(SQLParam.PHONE, null)));
+                        um.set(SQLParam.ID_CARD, formcatIdCard(um.get(SQLParam.ID_CARD, null)));
+                        um.set(SQLParam.ADDRESS, formcatAddress(um.get(SQLParam.ADDRESS, null)));
+                        um.set(SQLParam.REAL_NAME, formcatRealName(um.get(SQLParam.REAL_NAME, null)));
+                    }
                 }
             }
         }
@@ -216,10 +226,30 @@ public class UserModel extends Model<UserModel> {
         return "";
     }
 
+    public static String formcatRealName(String realName){
+        if (!StrUtils.isEmpty(realName)){
+            int length = realName.length();
+            if (length > 1){
+                StringBuilder su = StrUtils.getStringBuilder();
+                for (int i = 0; i < length - 1; i++){
+                    su.append("*");
+                }
+                realName = realName.substring(0, 1) + su.toString();
+            }
+            return realName;
+        }
+        return "";
+    }
+
     public static String formcatAddress(String address){
         if (!StrUtils.isEmpty(address)){
-            if (address.length() > 2){
-                address = address.substring(2);
+            int length = address.length();
+            if (length > 2){
+                StringBuilder su = new StringBuilder();
+                for(int i = 0; i < length - 2; i++){
+                    su.append("*");
+                }
+                address = address.substring(0, 2) + su.toString();
                 return address;
             }
         }

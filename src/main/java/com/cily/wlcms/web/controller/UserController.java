@@ -73,17 +73,21 @@ public class UserController extends BaseController {
     public void search(){
         String searchText = getParam(Param.SEARCH_TEXT);
         renderJsonSuccess(UserModel.searchUser(getParaToInt(Param.PAGE_NUMBER, 1),
-                getParaToInt(Param.PAGE_SIZE, 10), searchText));
+                getParaToInt(Param.PAGE_SIZE, 10), searchText, !"1".equals(getHeader("osType"))));
     }
 
     @Before({UserIdInterceptor.class})
     public void userInfo(){
         String userId = getParam(SQLParam.USER_ID);
         UserModel um = UserModel.getUserByUserId(userId);
+        String osType = getHeader("osType");
         um.remove(SQLParam.PWD);
-        um.set(SQLParam.PHONE, UserModel.formcatPhone(um.get(SQLParam.PHONE, null)));
-        um.set(SQLParam.ID_CARD, UserModel.formcatIdCard(um.get(SQLParam.ID_CARD, null)));
-        um.set(SQLParam.ADDRESS, UserModel.formcatAddress(um.get(SQLParam.ADDRESS, null)));
+        if (!"1".equals(osType)) {
+            um.set(SQLParam.REAL_NAME, UserModel.formcatRealName(um.get(SQLParam.REAL_NAME, null)));
+            um.set(SQLParam.PHONE, UserModel.formcatPhone(um.get(SQLParam.PHONE, null)));
+            um.set(SQLParam.ID_CARD, UserModel.formcatIdCard(um.get(SQLParam.ID_CARD, null)));
+            um.set(SQLParam.ADDRESS, UserModel.formcatAddress(um.get(SQLParam.ADDRESS, null)));
+        }
         renderJsonSuccess(um);
     }
 

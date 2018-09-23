@@ -60,10 +60,10 @@ $(document).ready(function(){
 			s+='<td>' + strFomcat(o.userName) + '</td>';
 			s+='<td>' + strFomcat(o.updateTime) + '</td>';
 			s+="<td><div class='layui-btn-group'>" +
-						"<button id='btn_show_img' data-imgs=" + o.recordImgUrl + " data-record-name=" + o.recordName + " data-record-num=" + o.recordNum + " class='layui-btn layui-btn-primary layui-btn-sm'>" + 
+						"<button id='btn_show_img' data-imgs=" + o.recordImgUrl + " data-record-name='" + o.recordName + "' data-record-num=" + o.recordNum + " class='layui-btn layui-btn-primary layui-btn-sm'>" +
 							"<i class='layui-icon'>&#xe60d;</i>" +
 						"</button>" +
-						"<button id='btn_user_info' data-record-content='" + getRecordContent(o.recordContent) + "' data-record-name=" + o.recordName + " data-record-num=" + o.recordNum + " class='layui-btn layui-btn-primary layui-btn-sm'>" +
+						"<button id='btn_user_info' data-record-id='" + o.recordId + "' data-record-content='" + getRecordContent(o.recordContent) + "' data-record-name=''" + o.recordName + "' data-record-num=" + o.recordNum + " class='layui-btn layui-btn-primary layui-btn-sm'>" +
 							"<i class='layui-icon'>&#xe63c;</i>" +
 						"</button>" +
 						"<button class='layui-btn layui-btn-primary layui-btn-sm' id='btn_user_del' data-record-id=" + o.recordId + ">" +
@@ -77,8 +77,9 @@ $(document).ready(function(){
 				var recordName = $(this).attr("data-record-name");
 				var recordNum = $(this).attr("data-record-num");
 				var recordContent = $(this).attr("data-record-content");
+				var recordId = $(this).attr("data-record-id");
 				
-				showRecordContent(recordName, recordNum, recordContent);
+				showRecordContent(recordId, recordName, recordNum, recordContent);
 			});
 			
 			$("#t_customerInfo #btn_user_del").on("click", function(){
@@ -148,8 +149,8 @@ $(document).ready(function(){
 		});
 	}
 	
-	function showRecordContent(recordName, recordNum, recordContent){
-		layui.use(['layer', 'form'], function() {
+	function showRecordContent(recordId, recordName, recordNum, recordContent){
+		/*layui.use(['layer', 'form'], function() {
 			var layer = layui.layer;
 			layer.open({
 	      		type: 1,
@@ -158,7 +159,15 @@ $(document).ready(function(){
 	      		shadeClose: true, //点击遮罩关闭
 	      		content: "<div style='padding:20px;'><p>" + recordContent + "</p></div>"
 	    	});
-		});
+		});*/
+		
+		layer.prompt({title: (recordName + '[' + recordNum + ']'), formType: 2,
+					area: ['600px', '360px'],
+					value: recordContent}, function(text, index){
+		    layer.close(index);
+//		    sendSSystemMsg(userId, text);
+			updateRecordContent(recordId, text);
+		  });
 	}
 	
 	$("#selectButton").click(function(){
@@ -293,6 +302,15 @@ $(document).ready(function(){
 	   			getRecords(recordStatus);
 			}, function error(){
 				new Toast({message: "操作失败，请重试..."}).show();
+		});
+	}
+	
+	function updateRecordContent(recordId, recordContent){
+		post(getHost() + "sysUser/updateContent",
+		{recordId: recordId, recordContent: recordContent}, function success(res){
+			new Toast({message: res.msg}).show();
+		}, function error(err){
+			new Toast({message: "更新失败，请重试..."}).show();
 		});
 	}
 });

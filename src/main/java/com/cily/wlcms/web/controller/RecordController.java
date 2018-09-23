@@ -8,9 +8,11 @@ import com.cily.wlcms.web.model.RecordModel;
 import com.cily.wlcms.web.utils.ResUtils;
 import com.jfinal.aop.Before;
 import com.jfinal.aop.Clear;
+import com.jfinal.kit.PathKit;
 import com.jfinal.kit.PropKit;
 
 import java.io.File;
+import java.net.URISyntaxException;
 import java.util.Map;
 
 /**
@@ -26,6 +28,10 @@ public class RecordController extends BaseImagesController {
 //        String img0 = null, img1 = null, img2 = null,
 //                img3 = null, img4 = null, img5 = null,
 //                img6 = null, img7 = null, img8 = null;
+
+        fileDir = PathKit.getWebRootPath().replace("\\webapps\\wlcms", "") + fileDir;
+        System.out.println("fileDir = " + fileDir);
+
         String fileUrl = null;
         try {
             Map<String, String> param = getImages(fileDir);
@@ -70,11 +76,13 @@ public class RecordController extends BaseImagesController {
         }
     }
 
+    @Clear
     public void getRecordsByUserId(){
         String userId = getParam(SQLParam.USER_ID);
         String recordStatus = getPara(SQLParam.RECORD_STATUS, null);
+        boolean onlyLoadSystemRecord = getParaToBoolean("onlyLoadSystemRecord", true);
         renderJsonSuccess(RecordModel.getRecordsByUserId(getParaToInt(Param.PAGE_NUMBER, 1),
-                getParaToInt(Param.PAGE_SIZE, 10), userId, recordStatus));
+                getParaToInt(Param.PAGE_SIZE, 10), userId, recordStatus, onlyLoadSystemRecord));
     }
 
     //userId不为空，查自己的。为空，则查任何人的
@@ -83,7 +91,8 @@ public class RecordController extends BaseImagesController {
         renderJsonSuccess(RecordModel.searchRecord(getParam(Param.SEARCH_TEXT),
                 getParam(SQLParam.USER_ID),
                 getParaToInt(Param.PAGE_NUMBER, 1),
-                getParaToInt(Param.PAGE_SIZE, 10)));
+                getParaToInt(Param.PAGE_SIZE, 10),
+                getParaToBoolean("onlySearchEnable", false)));
     }
 
     @Before({RecordIdInterceptor.class, RecordDelInterceptor.class})

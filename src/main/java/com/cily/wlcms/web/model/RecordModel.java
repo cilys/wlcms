@@ -2,7 +2,9 @@ package com.cily.wlcms.web.model;
 
 import com.cily.utils.base.StrUtils;
 import com.cily.utils.base.UUIDUtils;
+import com.cily.utils.base.time.TimeUtils;
 import com.cily.wlcms.web.conf.SQLParam;
+import com.jfinal.kit.PropKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
@@ -37,6 +39,7 @@ public class RecordModel extends Model<RecordModel> {
         m.set(SQLParam.RECORD_NUM, recordNum);
         m.set(SQLParam.RECORD_LEVEL, recordLevel);
         m.set(SQLParam.RECORD_CREATE_USER_ID, recordCreateUserId);
+        m.set(SQLParam.CREATE_TIME, TimeUtils.milToStr(System.currentTimeMillis(), null));
         if (!StrUtils.isEmpty(recordContent)){
             m.set(SQLParam.RECORD_CONTENT, recordContent);
         }
@@ -72,7 +75,10 @@ public class RecordModel extends Model<RecordModel> {
         if (!StrUtils.isEmpty(recordLevel)) {
             m.set(SQLParam.RECORD_LEVEL, recordLevel);
         }
-        if (!StrUtils.isEmpty(recordContent)){
+//        if (!StrUtils.isEmpty(recordContent)){
+//            m.set(SQLParam.RECORD_CONTENT, recordContent);
+//        }
+        if (recordContent != null){
             m.set(SQLParam.RECORD_CONTENT, recordContent);
         }
         if (!StrUtils.isEmpty(recordImgUrl)){
@@ -101,41 +107,44 @@ public class RecordModel extends Model<RecordModel> {
     }
 
     public static Page<RecordModel> searchRecord(String searchText, String userId,
-                                                 int pageNumber, int pageSize){
+                                                 int pageNumber, int pageSize,
+                                                 boolean onlySearchEnable){
         if (StrUtils.isEmpty(userId)) {
             //未查询创建者
 //            return dao.paginate(pageNumber, pageSize, "select * ",
 //                    StrUtils.join(" from ", SQLParam.T_RECORD));
-            return dao.paginate(pageNumber, pageSize, StrUtils.join("select ",
+            return dao.paginate(pageNumber, pageSize, StrUtils.join("select distinct ",
                     SQLParam.T_USER, ".", SQLParam.USER_NAME, ", ",
                     SQLParam.T_USER, ".", SQLParam.REAL_NAME, ", ", SQLParam.T_RECORD, ".* "),
 
                     StrUtils.join(" from ", SQLParam.T_RECORD, " left join ", SQLParam.T_USER, " on ",
                             SQLParam.T_USER, ".", SQLParam.USER_ID, " = ",
                             SQLParam.T_RECORD, ".", SQLParam.RECORD_CREATE_USER_ID,
-                            " where ", SQLParam.RECORD_ID, " like '%", searchText, "%' or ",
+                            " where (", SQLParam.RECORD_ID, " like '%", searchText, "%' or ",
                             SQLParam.RECORD_NUM, " like '%", searchText, "%' or ",
                             SQLParam.RECORD_NAME, " like '%", searchText, "%' or ",
-                            SQLParam.RECORD_CONTENT, " like '%", searchText, "%'"
+                            SQLParam.RECORD_CONTENT, " like '%", searchText, "%')",
+                            onlySearchEnable ? " and " + SQLParam.RECORD_STATUS + "='" + SQLParam.STATUS_ENABLE +"'": ""
                     ));
         }else {
-            return dao.paginate(pageNumber, pageSize, StrUtils.join("select ",
+            return dao.paginate(pageNumber, pageSize, StrUtils.join("select distinct ",
                     SQLParam.T_USER, ".", SQLParam.USER_NAME, ", ",
                     SQLParam.T_USER, ".", SQLParam.REAL_NAME, ", ", SQLParam.T_RECORD, ".* "),
                     StrUtils.join(" from ", SQLParam.T_RECORD, " left join ", SQLParam.T_USER, " on ",
                             SQLParam.T_USER, ".", SQLParam.USER_ID, " = ",
                             SQLParam.T_RECORD, ".", SQLParam.RECORD_CREATE_USER_ID,
-                            " where ", SQLParam.USER_ID, " = ", userId,
+                            " where ", SQLParam.USER_ID, " = ", userId, " and (",
                             SQLParam.RECORD_ID, " like '%", searchText, "%' or ",
                             SQLParam.RECORD_NUM, " like '%", searchText, "%' or ",
                             SQLParam.RECORD_NAME, " like '%", searchText, "%' or ",
-                            SQLParam.RECORD_CONTENT, " like '%", searchText, "%'"
+                            SQLParam.RECORD_CONTENT, " like '%", searchText, "%')",
+                            onlySearchEnable ? " and " + SQLParam.RECORD_STATUS + "='" + SQLParam.STATUS_ENABLE +"'": ""
                     ));
         }
     }
 
     public static Page<RecordModel> getRecordsByUserId(int pageNumber, int pageSize, String userId,
-                                                       String recordStatus) {
+                                                       String recordStatus, boolean onlyLoadSystemRecord) {
         if (pageNumber < 1) {
             pageNumber = 1;
         }
@@ -146,14 +155,16 @@ public class RecordModel extends Model<RecordModel> {
 //            return dao.paginate(pageNumber, pageSize, "select * ",
 //                    StrUtils.join(" from ", SQLParam.T_RECORD));
             if (SQLParam.STATUS_ENABLE.equals(recordStatus) || SQLParam.STATUS_DISABLE.equals(recordStatus)){
-                return dao.paginate(pageNumber, pageSize, StrUtils.join("select ",
+                return dao.paginate(pageNumber, pageSize, StrUtils.join("select distinct ",
                         SQLParam.T_USER, ".", SQLParam.USER_NAME, ", ",
                         SQLParam.T_USER, ".", SQLParam.REAL_NAME, ", ", SQLParam.T_RECORD, ".* "),
                         StrUtils.join(" from ", SQLParam.T_RECORD, " left join ", SQLParam.T_USER, " on ",
                                 SQLParam.T_USER, ".", SQLParam.USER_ID, " = ", SQLParam.T_RECORD, ".", SQLParam.RECORD_CREATE_USER_ID,
-                                " where ", SQLParam.T_RECORD, ".", SQLParam.RECORD_STATUS, " = ", recordStatus, " order by ", SQLParam.T_RECORD, ".", SQLParam.UPDATE_TIME, " desc"));
+                                " where ", SQLParam.T_RECORD, ".", SQLParam.RECORD_STATUS, " = ", recordStatus,
+                                onlyLoadSystemRecord ? StrUtils.join(" and ", SQLParam.T_RECORD, ".", SQLParam.RECORD_CREATE_USER_ID, " = '", PropKit.get("rootUserId", "670b14728ad9902aecba32e22fa4f6bd"), "'") : "",
+                                " order by ", SQLParam.T_RECORD, ".", SQLParam.UPDATE_TIME, " desc"));
             }else {
-                return dao.paginate(pageNumber, pageSize, StrUtils.join("select ",
+                return dao.paginate(pageNumber, pageSize, StrUtils.join("select distinct ",
                         SQLParam.T_USER, ".", SQLParam.USER_NAME, ", ",
                         SQLParam.T_USER, ".", SQLParam.REAL_NAME, ", ", SQLParam.T_RECORD, ".* "),
                         StrUtils.join(" from ", SQLParam.T_RECORD, " left join ", SQLParam.T_USER, " on ",
@@ -163,7 +174,7 @@ public class RecordModel extends Model<RecordModel> {
             }
         } else {
             if (SQLParam.STATUS_ENABLE.equals(recordStatus) || SQLParam.STATUS_DISABLE.equals(recordStatus)){
-                return dao.paginate(pageNumber, pageSize, StrUtils.join("select ",
+                return dao.paginate(pageNumber, pageSize, StrUtils.join("select distinct ",
                         SQLParam.T_USER, ".", SQLParam.USER_NAME, ", ",
                         SQLParam.T_USER, ".", SQLParam.REAL_NAME, ", ", SQLParam.T_RECORD, ".* "),
                         StrUtils.join(" from ", SQLParam.T_RECORD, " left join ", SQLParam.T_USER, " on ",
@@ -172,7 +183,7 @@ public class RecordModel extends Model<RecordModel> {
                                 SQLParam.T_RECORD, ".", SQLParam.RECORD_STATUS, " = ", recordStatus, " order by ", SQLParam.T_RECORD, ".", SQLParam.UPDATE_TIME, " desc"
                         ));
             }else {
-                return dao.paginate(pageNumber, pageSize, StrUtils.join("select ",
+                return dao.paginate(pageNumber, pageSize, StrUtils.join("select distinct ",
                         SQLParam.T_USER, ".", SQLParam.USER_NAME, ", ",
                         SQLParam.T_USER, ".", SQLParam.REAL_NAME, ", ", SQLParam.T_RECORD, ".* "),
                         StrUtils.join(" from ", SQLParam.T_RECORD, " left join ", SQLParam.T_USER, " on ",

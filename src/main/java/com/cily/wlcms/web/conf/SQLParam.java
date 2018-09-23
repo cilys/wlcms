@@ -15,6 +15,7 @@ public interface SQLParam {
     String T_TOKEN = "t_token";
     String T_COMMENT = "t_comment";
     String T_MSG = "t_msg";
+    String T_FRIEND = "t_friend";
 
 
     String USER_ID = "userId";
@@ -77,4 +78,9 @@ public interface SQLParam {
     String FROM_USER_ID = "fromUserId";
     String TO_USER_ID = "toUserId";
     String MSG = "msg";
+    String MSG_TYPE = "msgType";
+
+    String USER_ID_1 = "userId1";
+    String USER_ID_2 = "userId2";
+    String MSG_COUNT = "msgCount";
 }

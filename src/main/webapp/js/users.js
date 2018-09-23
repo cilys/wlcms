@@ -63,6 +63,9 @@ $(document).ready(function(){
 						"<button id='btn_user_edit' data-real-name=" + o.realName + " data-user-id=" + o.userId + " class='layui-btn layui-btn-primary layui-btn-sm'>" +
 							"<i class='layui-icon'>&#x1002;</i>" +
 						"</button>" +
+						"<button id='btn_user_notification' data-real-name='" + o.realName + "' data-user-id='" + o.userId + "' data-user-name='" + o.userName + "' class='layui-btn layui-btn-primary layui-btn-sm'>" +
+							"<i class='layui-icon'>&#xe611;</i>" +
+						"</button>" +
 						"<button class='layui-btn layui-btn-primary layui-btn-sm' id='btn_user_del' data-user-id=" + o.userId + ">" +
 							"<i class='layui-icon'>&#xe640;</i>" + "</button></div></td></tr>";
 		});
@@ -84,6 +87,13 @@ $(document).ready(function(){
 				var realName = $(this).attr("data-real-name");
 				var userId = $(this).attr("data-user-id");
 				enableUserDialog(status == "1" ? "0" : "1", realName, userId);
+			});
+			
+			$("#t_customerInfo #btn_user_notification").on("click", function(){
+				var userName = $(this).attr("data-user-name");
+				var realName = $(this).attr("data-real-name");
+				var userId = $(this).attr("data-user-id");
+                dialogMsg(userName, realName, userId);
 			});
 			
 		}else{
@@ -258,7 +268,7 @@ $(document).ready(function(){
 				shade:0,
 				yes:function(){
 					layui.layer.closeAll();
-					resetPwd(realName, userId);
+					resetPwd(userId);
 				}
 			});
 		});
@@ -337,4 +347,20 @@ $(document).ready(function(){
 		userStatus = "1";
 		getUsers(userStatus);
 	});
+	
+	function dialogMsg(userName, realName, userId){
+		layer.prompt({title: '给【' + (strIsEmpty(realName) ? userName : realName) + "】发送系统消息：", formType: 2, maxlength:100}, function(text, index){
+		    layer.close(index);
+		    sendSSystemMsg(userId, text);
+		  });
+	}
+	function sendSSystemMsg(toUserId, msg){
+		post(getHost() + "msg/insert", {toUserId: toUserId, msgType: "0", msg: msg}, 
+			function success(res){
+				log(res);
+				new Toast({message: res.msg}).show();
+			}, function error(err){
+				new Toast({message: "操作失败，请重试..."}).show();
+			});
+	}
 });

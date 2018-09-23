@@ -105,5 +105,9 @@ var navs = [{
 		"title": "发布列表",
 		"icon": "&#xe63c;",
 		"href": "records.html"
+	}, {
+		"title": "消息列表",
+		"icon": "&#xe611;",
+		"href": "msgs.html"
 	}]
 }];
